@@ -148,10 +148,11 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 - [x] Inicializar git
 
 ### Fase 1 — Cuerpo 3D básico
-- [ ] Escena 3D con cámara orbital (girar y hacer zoom)
-- [ ] Silueta con **figuras simples** (esferas y cápsulas) como órganos: páncreas, riñones, ojos, corazón, nervios periféricos, hígado
-- [ ] Clic en un órgano → se resalta y muestra su nombre
-- [ ] Coloreado según el nivel de afectación
+- [x] Escena 3D con cámara orbital (girar y hacer zoom)
+- [x] Silueta con **figuras simples** (esferas y cápsulas) como órganos: páncreas, riñones, ojos, corazón, nervios periféricos, hígado
+- [x] Clic en un órgano → se resalta y muestra su nombre
+- [x] Coloreado según el nivel de afectación
+- [x] Lista lateral accesible con teclado, aviso si no hay WebGL, carga diferida del 3D
 
 **Entregable:** cuerpo esquemático interactivo.
 

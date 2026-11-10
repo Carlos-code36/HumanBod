@@ -1,0 +1,170 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.header h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+}
+
+.warning {
+  margin: 0 0 1.25rem;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.viewer {
+  min-width: 0;
+}
+
+.viewer-box {
+  position: relative;
+  overflow: hidden;
+  height: min(72vh, 680px);
+  min-height: 420px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-bg);
+}
+
+.viewer-fallback {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+.hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-bg);
+  padding: 1rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.organ-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.organ-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.organ-button:hover {
+  background: var(--hover-bg);
+}
+
+.organ-button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--hover-bg);
+}
+
+.organ-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.dot {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+
+.organ-name {
+  flex: 1;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.detail {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.detail h3 {
+  margin: 0 0 0.4rem;
+  color: var(--text-h);
+}
+
+.detail p {
+  margin: 0 0 0.5rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.demo-toggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.demo-toggle input {
+  margin-top: 0.2rem;
+}
+
+.organ-label {
+  white-space: nowrap;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(17, 16, 24, 0.85);
+  color: #fff;
+  font-size: 0.8rem;
+}

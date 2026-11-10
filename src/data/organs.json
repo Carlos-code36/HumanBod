@@ -1,0 +1,8 @@
+[
+  { "id": "ojos", "nombre": "Ojos (retina)", "sistema": "sensorial", "mesh": "eyes" },
+  { "id": "corazon", "nombre": "Corazón", "sistema": "cardiovascular", "mesh": "heart" },
+  { "id": "higado", "nombre": "Hígado", "sistema": "digestivo", "mesh": "liver" },
+  { "id": "pancreas", "nombre": "Páncreas", "sistema": "endocrino", "mesh": "pancreas" },
+  { "id": "rinones", "nombre": "Riñones", "sistema": "urinario", "mesh": "kidneys" },
+  { "id": "nervios", "nombre": "Nervios periféricos", "sistema": "nervioso", "mesh": "nerves" }
+]

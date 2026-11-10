@@ -6,6 +6,9 @@
   --accent: #2f6fdb;
   --warning-bg: #fff6e0;
   --warning-border: #f0c75e;
+  --panel-bg: #ffffff;
+  --hover-bg: rgba(47, 111, 219, 0.08);
+  --muted: #6b6876;
 
   font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
@@ -22,6 +25,9 @@
     --accent: #6f9cf0;
     --warning-bg: #2d2615;
     --warning-border: #8a6d1f;
+    --panel-bg: #1c1b22;
+    --hover-bg: rgba(111, 156, 240, 0.12);
+    --muted: #9a97a5;
   }
 }
 
