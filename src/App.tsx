@@ -11,6 +11,8 @@ import { useAppStore } from './store/useAppStore'
 
 // El 3D se carga aparte: la página aparece rápido y muestra "Cargando…" mientras tanto.
 const BodyViewer = lazy(() => import('./components/BodyViewer/BodyViewer'))
+// Las gráficas (Recharts) también se cargan aparte.
+const SimulationPanel = lazy(() => import('./components/SimulationPanel/SimulationPanel'))
 
 function App() {
   const [webgl] = useState(hasWebGL)
@@ -62,6 +64,9 @@ function App() {
             <PatientForm disease={DIABETES_T2} />
             <ResultsSummary />
           </div>
+          <Suspense fallback={<div className="panel muted">Cargando simulación…</div>}>
+            <SimulationPanel />
+          </Suspense>
         </div>
 
         <div className="side">

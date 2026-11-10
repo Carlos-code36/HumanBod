@@ -9,6 +9,10 @@
   --panel-bg: #ffffff;
   --hover-bg: rgba(47, 111, 219, 0.08);
   --muted: #6b6876;
+  --serie-1: #2a78d6;
+  --serie-ref: #6b6876;
+  --chart-grid: #ecebef;
+  --chart-axis: #b9b7c0;
 
   font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
@@ -28,6 +32,10 @@
     --panel-bg: #1c1b22;
     --hover-bg: rgba(111, 156, 240, 0.12);
     --muted: #9a97a5;
+    --serie-1: #3987e5;
+    --serie-ref: #9a97a5;
+    --chart-grid: #2a2932;
+    --chart-axis: #4a4855;
   }
 }
 

@@ -185,9 +185,13 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 **Entregable:** primera versión de "medir y predecir la afectación".
 
 ### Fase 4 — Simulación fisiológica
-- [ ] Implementar el modelo mínimo de Bergman (método Runge-Kutta 4)
-- [ ] Gráfica de glucosa e insulina en el tiempo
-- [ ] Controles: sensibilidad a la insulina (persona sana vs. con diabetes), comida, medicación (simplificada)
+- [x] Implementar el modelo mínimo de Bergman (método Runge-Kutta 4), con absorción de la comida y secreción de insulina
+- [x] Gráfica de glucosa e insulina en el tiempo (dos gráficas, sin doble eje; referencia sana discontinua; tabla de datos)
+- [x] Controles: perfil (sana / resistencia / diabetes), sensibilidad a la insulina, secreción, glucosa en ayunas, carbohidratos, una comida o un día
+- [x] Medicación: **decisión** — no se simulan medicamentos con efectos inventados; se explica que los tratamientos actúan sobre sensibilidad o secreción y el usuario mueve esos controles
+- [x] Botón para usar el perfil que corresponde al paciente evaluado; `?perfil=<id>` en la dirección
+
+**Verificación (noviembre de 2026):** SI y SG de referencia según Bergman, *Diabetes* 1989 (sana 7.6 × 10⁻⁴; obesidad 2.3 × 10⁻⁴; diabetes tipo 2 0.61 × 10⁻⁴; SG 0.026 → 0.014 en diabetes). La secreción (β) y la absorción (kabs) **no vienen de la literatura**: se calibraron para que la persona sana tenga un pico de ~140 mg/dL a los ~45 min y ~100 mg/dL a las 2 h con 60 g de carbohidratos.
 
 **Entregable:** simulador educativo de glucosa.
 
