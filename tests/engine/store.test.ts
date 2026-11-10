@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { DIABETES_T2 } from '../../src/data/diseases'
+import { evaluar } from '../../src/engine/evaluar'
 import { useAppStore } from '../../src/store/useAppStore'
+import { personas } from '../factories/patientFactory'
 
 beforeEach(() => {
-  useAppStore.setState({ selectedOrganId: null, niveles: {} })
+  useAppStore.setState({ selectedOrganId: null, evaluacion: null, niveles: {} })
 })
 
 describe('selección de órganos (F1-02, F1-03)', () => {
@@ -23,10 +26,10 @@ describe('selección de órganos (F1-02, F1-03)', () => {
     expect(useAppStore.getState().selectedOrganId).toBeNull()
   })
 
-  it('setNiveles reemplaza los niveles', () => {
-    useAppStore.getState().setNiveles({ rinones: 'moderada' })
-    expect(useAppStore.getState().niveles).toEqual({ rinones: 'moderada' })
-    useAppStore.getState().setNiveles({})
+  it('setEvaluacion actualiza los niveles derivados (colores del cuerpo)', () => {
+    useAppStore.getState().setEvaluacion(evaluar(personas.nefropatiaModerada, DIABETES_T2))
+    expect(useAppStore.getState().niveles.rinones).toBe('moderada')
+    useAppStore.getState().setEvaluacion(null)
     expect(useAppStore.getState().niveles).toEqual({})
   })
 })

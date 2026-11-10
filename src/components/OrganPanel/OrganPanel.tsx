@@ -39,6 +39,7 @@ function EscalaView({ escala, disease }: { escala: Escala; disease: Disease }) {
 export default function OrganPanel({ disease }: { disease: Disease }) {
   const selectedId = useAppStore((s) => s.selectedOrganId)
   const nivel = useAppStore((s) => (selectedId ? s.niveles[selectedId] : undefined))
+  const resultado = useAppStore((s) => (selectedId ? s.evaluacion?.organos[selectedId] : undefined))
   const organ = findOrgan(selectedId)
   const afectacion = afectacionDe(disease, selectedId)
 
@@ -72,6 +73,26 @@ export default function OrganPanel({ disease }: { disease: Disease }) {
           </p>
 
           <h3>{afectacion.complicacion}</h3>
+
+          <div className="resultado-organo">
+            <h4>
+              <span className="dot" style={{ background: colorDeNivel(nivel) }} aria-hidden="true" /> Resultado con los datos
+              ingresados: {resultado ? resultado.titulo : 'Sin datos'}
+            </h4>
+            {resultado ? (
+              <>
+                <ul>
+                  {resultado.explicacion.map((e) => (
+                    <li key={e}>{e}</li>
+                  ))}
+                </ul>
+                {resultado.fuente && <p className="muted small">Fuente: {resultado.fuente}</p>}
+              </>
+            ) : (
+              <p className="muted small">Completa los datos del paciente para calcularlo.</p>
+            )}
+          </div>
+
           <h4>¿Por qué ocurre?</h4>
           <p>{afectacion.mecanismo}</p>
 

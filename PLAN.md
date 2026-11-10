@@ -122,10 +122,18 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 |---|---|---|---|
 | `findrisc.ts` | Riesgo de desarrollar diabetes en 10 años (puntaje 0–26) | Personas **sin** diagnóstico | Lindström & Tuomilehto, 2003 |
 | `kidney.ts` | Etapa renal G1–G5 según TFG, y A1–A3 según albuminuria | Personas **con** diabetes | Guías KDIGO |
-| `staging.ts` | Ojos y nervios: etapa ingresada por el usuario o estimada con reglas simples | Personas con diabetes | Guías ADA |
+| `glucemia.ts` | Normal / prediabetes / diabetes por HbA1c y glucosa en ayunas | Todos | ADA |
+| `evaluar.ts` | Une todo; ojos, nervios, corazón e hígado usan la etapa que indique el usuario | Todos | Escalas de diabetes_t2.json |
 | `bergman.ts` | Curva de glucosa e insulina tras una comida (ecuaciones diferenciales) | Simulación educativa | Bergman et al., 1979 |
 
 > ⚠️ Antes de programar cada módulo hay que **verificar umbrales y puntajes contra la publicación original**. No se debe copiar de memoria ni de fuentes secundarias.
+
+### Verificación realizada (Fase 3, noviembre de 2026)
+- **FINDRISC:** puntajes y categorías confirmados con varias fuentes secundarias coincidentes (no se pudo acceder al artículo original de *Diabetes Care* 2003).
+  **Decisión:** el cuestionario no define los extremos de "25–30" ni "94–102"; se toman **incluidos** (IMC 30.0 → 1 punto, 30.1 → 3 puntos).
+- **KDIGO:** categorías G y A confirmadas con resúmenes de la guía 2024; colores del mapa de calor confirmados con la figura KDIGO (versión 2012).
+  **Pendiente:** confirmar que el mapa 2024 no cambió colores.
+- **ADA (HbA1c y glucosa):** umbrales estándar (5.7 / 6.5 % y 100 / 126 mg/dL), sin verificación en línea adicional.
 
 ### Modos de uso
 - **Modo prevención:** sin diagnóstico → FINDRISC → riesgo y órganos que podrían afectarse.
@@ -165,12 +173,14 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 **Entregable:** explorador educativo de la diabetes en el cuerpo.
 
 ### Fase 3 — Formulario y cálculo de afectación
-- [ ] Formulario de datos con validación de rangos
-- [ ] `findrisc.ts` con pruebas
-- [ ] `kidney.ts` (KDIGO) con pruebas
-- [ ] `staging.ts` para ojos y nervios
-- [ ] Conectar resultados → colores del cuerpo + resumen de riesgo
-- [ ] Mostrar "por qué" de cada resultado y su fuente
+- [x] Formulario de datos con validación de rangos (Zod), coma decimal y selector de unidades
+- [x] `findrisc.ts` con pruebas
+- [x] `kidney.ts` (KDIGO, incluido el mapa de calor) con pruebas
+- [x] `glucemia.ts` (categorías ADA por HbA1c y glucosa en ayunas) con pruebas
+- [x] Ojos, nervios, corazón e hígado: etapa conocida por estudios previos (en `evaluar.ts`, no hizo falta `staging.ts` aparte)
+- [x] Conectar resultados → colores del cuerpo + resumen de riesgo
+- [x] Mostrar "por qué" de cada resultado y su fuente
+- [x] Pacientes de ejemplo (`?ejemplo=<id>`) y pruebas de interfaz con Testing Library
 
 **Entregable:** primera versión de "medir y predecir la afectación".
 

@@ -4,33 +4,17 @@ import ViewerBoundary from './components/BodyViewer/ViewerBoundary'
 import { hasWebGL } from './components/BodyViewer/webgl'
 import OrganList from './components/OrganList/OrganList'
 import OrganPanel from './components/OrganPanel/OrganPanel'
+import PatientForm from './components/PatientForm/PatientForm'
+import ResultsSummary from './components/ResultsSummary/ResultsSummary'
 import { DIABETES_T2 } from './data/diseases'
 import { useAppStore } from './store/useAppStore'
-import type { NivelAfectacion } from './types/medical'
 
 // El 3D se carga aparte: la página aparece rápido y muestra "Cargando…" mientras tanto.
 const BodyViewer = lazy(() => import('./components/BodyViewer/BodyViewer'))
 
-/** Solo para ver los colores en la Fase 1. NO es un cálculo: los valores son de ejemplo. */
-const DEMO_NIVELES: Record<string, NivelAfectacion> = {
-  ojos: 'leve',
-  corazon: 'normal',
-  higado: 'normal',
-  pancreas: 'severa',
-  rinones: 'moderada',
-  nervios: 'leve',
-}
-
 function App() {
   const [webgl] = useState(hasWebGL)
-  // Con "?demo" en la dirección se abre con la vista previa activada.
-  const [demo, setDemo] = useState(() => new URLSearchParams(window.location.search).has('demo'))
-  const setNiveles = useAppStore((s) => s.setNiveles)
   const selectOrgan = useAppStore((s) => s.selectOrgan)
-
-  useEffect(() => {
-    setNiveles(demo ? DEMO_NIVELES : {})
-  }, [demo, setNiveles])
 
   // Con "?organo=rinones" en la dirección se abre con ese órgano seleccionado (los ids inválidos se ignoran).
   useEffect(() => {
@@ -57,32 +41,32 @@ function App() {
       </header>
 
       <div className="layout">
-        <section className="viewer" aria-label="Visor del cuerpo">
-          <div className="viewer-box">
-            {webgl ? (
-              <ViewerBoundary>
-                <Suspense fallback={<div className="viewer-fallback">Cargando cuerpo 3D…</div>}>
-                  <BodyViewer />
-                </Suspense>
-              </ViewerBoundary>
-            ) : (
-              <div className="viewer-fallback" role="alert">
-                Tu navegador o tarjeta gráfica no soporta 3D (WebGL). Puedes usar la lista de órganos.
-              </div>
-            )}
+        <div className="main">
+          <section className="viewer" aria-label="Visor del cuerpo">
+            <div className="viewer-box">
+              {webgl ? (
+                <ViewerBoundary>
+                  <Suspense fallback={<div className="viewer-fallback">Cargando cuerpo 3D…</div>}>
+                    <BodyViewer />
+                  </Suspense>
+                </ViewerBoundary>
+              ) : (
+                <div className="viewer-fallback" role="alert">
+                  Tu navegador o tarjeta gráfica no soporta 3D (WebGL). Puedes usar la lista de órganos.
+                </div>
+              )}
+            </div>
+            <p className="hint">Arrastra para girar · rueda para acercar · clic en un órgano para seleccionarlo</p>
+          </section>
+          <div className="form-results">
+            <PatientForm disease={DIABETES_T2} />
+            <ResultsSummary />
           </div>
-          <p className="hint">Arrastra para girar · rueda para acercar · clic en un órgano para seleccionarlo</p>
-        </section>
+        </div>
 
         <div className="side">
           <OrganList />
           <OrganPanel disease={DIABETES_T2} />
-          <label className="demo-toggle">
-            <input type="checkbox" checked={demo} onChange={(e) => setDemo(e.target.checked)} />
-            <span>
-              Vista previa de colores <span className="muted">(valores de ejemplo, no es un cálculo)</span>
-            </span>
-          </label>
         </div>
       </div>
     </div>
