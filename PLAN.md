@@ -141,11 +141,11 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 > Los escenarios de prueba y los problemas posibles de cada fase están en [ESCENARIOS.md](ESCENARIOS.md).
 
 ### Fase 0 — Preparación
-- [ ] Revisar Node.js (`node -v`, versión 18 o mayor)
-- [ ] Crear el proyecto con Vite (`react-ts`)
-- [ ] Instalar dependencias (three, @react-three/fiber, @react-three/drei, zustand, recharts, zod, vitest)
-- [ ] Crear `tests/factories/` con las personas de prueba
-- [ ] Inicializar git
+- [x] Revisar Node.js (`node -v`, versión 18 o mayor)
+- [x] Crear el proyecto con Vite (`react-ts`)
+- [x] Instalar dependencias (three, @react-three/fiber, @react-three/drei, zustand, recharts, zod, vitest)
+- [x] Crear `tests/factories/` con las personas de prueba
+- [x] Inicializar git
 
 ### Fase 1 — Cuerpo 3D básico
 - [ ] Escena 3D con cámara orbital (girar y hacer zoom)
