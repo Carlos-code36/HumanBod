@@ -86,7 +86,7 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | Rutas con espacios o acentos | Mantener el proyecto en `c:\Development\new` |
 | Dependencias incompatibles entre sí | Usar versiones fijas en `package.json` y guardar `package-lock.json` en git |
 | Perder trabajo | git desde el primer día; un commit al cerrar cada tarea |
-| ✅ **Ocurrió:** Vitest falla con "failed to find the current suite" si la carpeta se abre como `c:` (minúscula) | Resuelto con `scripts/vitest.mjs`, que lanza Vitest con `C:`. Usar siempre `npm test`, no `npx vitest` |
+| ✅ **Ocurrió:** Vitest falla con "failed to find the current suite" si la carpeta se abre como `c:\` (minúscula) | Resuelto con `scripts/vitest.mjs`, que lanza Vitest con `C:\`. Usar siempre `npm test`, no `npx vitest` |
 
 ---
 
