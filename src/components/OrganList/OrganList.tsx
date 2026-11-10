@@ -1,4 +1,4 @@
-import { ORGANS, findOrgan } from '../../data/organs'
+import { ORGANS } from '../../data/organs'
 import { colorDeNivel, etiquetaDeNivel } from '../../engine/afectacion'
 import { useAppStore } from '../../store/useAppStore'
 
@@ -10,10 +10,9 @@ export default function OrganList() {
   const selectedId = useAppStore((s) => s.selectedOrganId)
   const niveles = useAppStore((s) => s.niveles)
   const selectOrgan = useAppStore((s) => s.selectOrgan)
-  const selected = findOrgan(selectedId)
 
   return (
-    <aside className="panel">
+    <nav className="panel" aria-label="Órganos">
       <h2>Órganos</h2>
       <ul className="organ-list">
         {ORGANS.map((organ) => {
@@ -35,22 +34,6 @@ export default function OrganList() {
           )
         })}
       </ul>
-
-      <section className="detail" aria-live="polite">
-        {selected ? (
-          <>
-            <h3>{selected.nombre}</h3>
-            <p>
-              Sistema: <strong>{selected.sistema}</strong>
-              <br />
-              Afectación: <strong>{etiquetaDeNivel(niveles[selected.id])}</strong>
-            </p>
-            <p className="muted">La información sobre la diabetes en este órgano llega en la Fase 2.</p>
-          </>
-        ) : (
-          <p className="muted">Selecciona un órgano en el cuerpo o en la lista. Esc quita la selección.</p>
-        )}
-      </section>
-    </aside>
+    </nav>
   )
 }

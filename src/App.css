@@ -127,21 +127,6 @@
   color: var(--muted);
 }
 
-.detail {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border);
-}
-
-.detail h3 {
-  margin: 0 0 0.4rem;
-  color: var(--text-h);
-}
-
-.detail p {
-  margin: 0 0 0.5rem;
-}
-
 .muted {
   color: var(--muted);
   font-size: 0.9rem;
@@ -167,4 +152,90 @@
   background: rgba(17, 16, 24, 0.85);
   color: #fff;
   font-size: 0.8rem;
+}
+
+.side {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+/* F2-07: el contenido largo se desplaza dentro del panel */
+.detail-panel {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detail-panel h2 {
+  margin: 0 0 0.25rem;
+}
+
+.detail-panel h3 {
+  margin: 1rem 0 0.25rem;
+  font-size: 1.05rem;
+  color: var(--text-h);
+}
+
+.detail-panel h4 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.95rem;
+  color: var(--text-h);
+}
+
+.detail-panel h5 {
+  margin: 0.5rem 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.detail-panel p {
+  margin: 0 0 0.5rem;
+}
+
+.detail-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.etapas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.etapas li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.etapas .dot {
+  margin-top: 0.35rem;
+}
+
+.etapas p {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+}
+
+.escala + .escala {
+  margin-top: 0.75rem;
+}
+
+.small {
+  font-size: 0.82rem;
+}
+
+.fuentes li + li {
+  margin-top: 0.3rem;
+}
+
+.draft {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  background: var(--warning-bg);
+  border: 1px dashed var(--warning-border);
 }

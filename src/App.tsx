@@ -3,6 +3,8 @@ import './App.css'
 import ViewerBoundary from './components/BodyViewer/ViewerBoundary'
 import { hasWebGL } from './components/BodyViewer/webgl'
 import OrganList from './components/OrganList/OrganList'
+import OrganPanel from './components/OrganPanel/OrganPanel'
+import { DIABETES_T2 } from './data/diseases'
 import { useAppStore } from './store/useAppStore'
 import type { NivelAfectacion } from './types/medical'
 
@@ -29,6 +31,12 @@ function App() {
   useEffect(() => {
     setNiveles(demo ? DEMO_NIVELES : {})
   }, [demo, setNiveles])
+
+  // Con "?organo=rinones" en la dirección se abre con ese órgano seleccionado (los ids inválidos se ignoran).
+  useEffect(() => {
+    const organo = new URLSearchParams(window.location.search).get('organo')
+    if (organo) selectOrgan(organo)
+  }, [selectOrgan])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -68,6 +76,7 @@ function App() {
 
         <div className="side">
           <OrganList />
+          <OrganPanel disease={DIABETES_T2} />
           <label className="demo-toggle">
             <input type="checkbox" checked={demo} onChange={(e) => setDemo(e.target.checked)} />
             <span>

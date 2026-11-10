@@ -1,8 +1,13 @@
 /**
  * Tipos médicos base del proyecto.
  * Las unidades van explícitas en el nombre del campo para evitar confusiones.
- * En la Fase 2 estos tipos se derivarán de esquemas Zod (una sola fuente de verdad).
+ * Los tipos de datos médicos (órganos, enfermedades, niveles) se generan desde los esquemas Zod
+ * en src/data/schemas.ts. PatientData pasará a Zod en la Fase 3, junto con el formulario.
  */
+
+import type { Nivel } from '../data/schemas'
+
+export type { Afectacion, Disease, Escala, Etapa, Fuente, Organ } from '../data/schemas'
 
 export type Sexo = 'F' | 'M'
 
@@ -10,7 +15,7 @@ export type Sexo = 'F' | 'M'
 export type AntecedentesFamiliares = 'ninguno' | 'segundo_grado' | 'primer_grado'
 
 /** Nivel de afectación de un órgano; define su color en el cuerpo 3D. */
-export type NivelAfectacion = 'sin_datos' | 'normal' | 'leve' | 'moderada' | 'severa'
+export type NivelAfectacion = Nivel
 
 export interface PatientData {
   edad: number
@@ -39,10 +44,3 @@ export interface PatientData {
   presionDiastolica?: number
 }
 
-export interface Organ {
-  id: string
-  nombre: string
-  sistema: string
-  /** Nombre de la pieza en el modelo 3D. */
-  mesh: string
-}

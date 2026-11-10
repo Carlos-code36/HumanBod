@@ -157,9 +157,10 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 **Entregable:** cuerpo esquemático interactivo.
 
 ### Fase 2 — Conocimiento de la enfermedad
-- [ ] Definir tipos en `types/medical.ts`
-- [ ] Escribir `organs.json` y `diabetes_t2.json` con fuentes
-- [ ] Panel lateral: al seleccionar un órgano, mostrar complicación, etapas y explicación
+- [x] Definir esquemas Zod en `data/schemas.ts` (los tipos de `types/medical.ts` se generan de ahí)
+- [x] Escribir `organs.json` y `diabetes_t2.json` con fuentes
+- [x] Panel lateral: al seleccionar un órgano, mostrar complicación, etapas y explicación
+- [ ] **Pendiente:** revisión del contenido médico por un profesional (hoy está marcado como borrador)
 
 **Entregable:** explorador educativo de la diabetes en el cuerpo.
 

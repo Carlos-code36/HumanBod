@@ -1,0 +1,202 @@
+{
+  "id": "diabetes_t2",
+  "nombre": "Diabetes mellitus tipo 2",
+  "descripcion": "Enfermedad crónica en la que el cuerpo responde mal a la insulina (resistencia a la insulina) y el páncreas, con los años, no logra producir suficiente para compensar. La glucosa alta sostenida daña vasos sanguíneos pequeños (ojos, riñones, nervios) y grandes (corazón, cerebro, piernas).",
+  "estadoRevision": "borrador",
+  "fuentes": [
+    {
+      "id": "ada_soc",
+      "titulo": "Standards of Care in Diabetes",
+      "autor": "American Diabetes Association (ADA)",
+      "publicacion": "Diabetes Care, suplemento anual",
+      "nota": "Se actualiza cada año; consultar la edición vigente."
+    },
+    {
+      "id": "kdigo_erc_2024",
+      "titulo": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+      "autor": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+      "anio": 2024,
+      "publicacion": "Kidney International"
+    },
+    {
+      "id": "wilkinson_2003",
+      "titulo": "Proposed international clinical diabetic retinopathy and diabetic macular edema disease severity scales",
+      "autor": "Wilkinson CP, et al.",
+      "anio": 2003,
+      "publicacion": "Ophthalmology"
+    },
+    {
+      "id": "dyck_1988",
+      "titulo": "Detection, characterization, and staging of polyneuropathy: assessed in diabetics",
+      "autor": "Dyck PJ",
+      "anio": 1988,
+      "publicacion": "Muscle & Nerve"
+    },
+    {
+      "id": "aha_acc_ic_2022",
+      "titulo": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "autor": "Heidenreich PA, et al.",
+      "anio": 2022,
+      "publicacion": "Circulation"
+    },
+    {
+      "id": "rinella_2023",
+      "titulo": "A multisociety Delphi consensus statement on new fatty liver disease nomenclature",
+      "autor": "Rinella ME, et al.",
+      "anio": 2023,
+      "publicacion": "Journal of Hepatology / Hepatology"
+    }
+  ],
+  "afectaciones": [
+    {
+      "organo": "pancreas",
+      "complicacion": "Resistencia a la insulina y agotamiento de las células beta",
+      "mecanismo": "Es el origen de la enfermedad. Músculos, hígado y grasa responden menos a la insulina, así que el páncreas produce más para compensar. Con los años las células beta (las que fabrican insulina) se agotan y pierden función, y la glucosa en sangre sube.",
+      "escalas": [
+        {
+          "id": "categoria_glucemica",
+          "nombre": "Categoría según HbA1c",
+          "fuente": "ada_soc",
+          "etapas": [
+            { "id": "normal", "nombre": "Normal", "descripcion": "HbA1c menor a 5.7 %.", "nivel": "normal" },
+            { "id": "prediabetes", "nombre": "Prediabetes", "descripcion": "HbA1c de 5.7 % a 6.4 %. Riesgo alto de desarrollar diabetes; los cambios de estilo de vida pueden retrasarla o evitarla.", "nivel": "leve" },
+            { "id": "diabetes", "nombre": "Diabetes", "descripcion": "HbA1c de 6.5 % o más (confirmado con una segunda prueba).", "nivel": "moderada" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "Tamizaje desde los 35 años, o antes en adultos con sobrepeso u obesidad y algún factor de riesgo.",
+        "Pruebas: HbA1c, glucosa en ayunas o curva de tolerancia a la glucosa."
+      ],
+      "fuentes": ["ada_soc"]
+    },
+    {
+      "organo": "ojos",
+      "complicacion": "Retinopatía diabética",
+      "mecanismo": "La glucosa alta daña los vasos pequeños de la retina: se debilitan, forman microaneurismas y filtran líquido o sangre. Las zonas sin suficiente oxígeno estimulan vasos nuevos y frágiles que pueden sangrar o desprender la retina. Si el líquido se acumula en el centro de la visión aparece el edema macular.",
+      "escalas": [
+        {
+          "id": "retinopatia",
+          "nombre": "Escala clínica internacional de retinopatía diabética",
+          "fuente": "wilkinson_2003",
+          "etapas": [
+            { "id": "sin_rd", "nombre": "Sin retinopatía aparente", "descripcion": "No se observan lesiones en el fondo de ojo.", "nivel": "normal" },
+            { "id": "rdnp_leve", "nombre": "No proliferativa leve", "descripcion": "Solo microaneurismas.", "nivel": "leve" },
+            { "id": "rdnp_moderada", "nombre": "No proliferativa moderada", "descripcion": "Más lesiones que solo microaneurismas, sin llegar a los criterios de la etapa severa.", "nivel": "moderada" },
+            { "id": "rdnp_severa", "nombre": "No proliferativa severa", "descripcion": "Hemorragias abundantes, alteraciones venosas o vasculares importantes, sin vasos nuevos.", "nivel": "severa" },
+            { "id": "rdp", "nombre": "Proliferativa", "descripcion": "Aparecen vasos nuevos o hemorragia en el vítreo. Riesgo alto de pérdida de visión.", "nivel": "severa" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "Examen de retina con pupila dilatada al momento del diagnóstico de diabetes tipo 2.",
+        "Si no hay retinopatía y el control es bueno, cada 1 a 2 años; si hay retinopatía, al menos cada año."
+      ],
+      "fuentes": ["wilkinson_2003", "ada_soc"]
+    },
+    {
+      "organo": "rinones",
+      "complicacion": "Enfermedad renal crónica por diabetes",
+      "mecanismo": "La glucosa alta y la presión arterial elevada dañan los glomérulos, los filtros del riñón. Primero se escapa albúmina (una proteína) a la orina; con el tiempo baja la capacidad de filtrar la sangre (la TFG) y pueden acumularse desechos.",
+      "escalas": [
+        {
+          "id": "kdigo_tfg",
+          "nombre": "Categoría por filtración glomerular (TFG, mL/min/1.73 m²)",
+          "fuente": "kdigo_erc_2024",
+          "etapas": [
+            { "id": "g1", "nombre": "G1", "descripcion": "TFG de 90 o más: normal o alta.", "nivel": "normal" },
+            { "id": "g2", "nombre": "G2", "descripcion": "TFG de 60 a 89: levemente disminuida.", "nivel": "leve" },
+            { "id": "g3a", "nombre": "G3a", "descripcion": "TFG de 45 a 59: disminución leve a moderada.", "nivel": "moderada" },
+            { "id": "g3b", "nombre": "G3b", "descripcion": "TFG de 30 a 44: disminución moderada a severa.", "nivel": "moderada" },
+            { "id": "g4", "nombre": "G4", "descripcion": "TFG de 15 a 29: severamente disminuida.", "nivel": "severa" },
+            { "id": "g5", "nombre": "G5", "descripcion": "TFG menor a 15: falla renal.", "nivel": "severa" }
+          ]
+        },
+        {
+          "id": "kdigo_albuminuria",
+          "nombre": "Categoría por albuminuria (cociente albúmina/creatinina, mg/g)",
+          "fuente": "kdigo_erc_2024",
+          "etapas": [
+            { "id": "a1", "nombre": "A1", "descripcion": "Menos de 30 mg/g: normal o levemente aumentada.", "nivel": "normal" },
+            { "id": "a2", "nombre": "A2", "descripcion": "De 30 a 300 mg/g: moderadamente aumentada.", "nivel": "moderada" },
+            { "id": "a3", "nombre": "A3", "descripcion": "Más de 300 mg/g: severamente aumentada.", "nivel": "severa" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "Desde el diagnóstico de diabetes tipo 2, al menos una vez al año: cociente albúmina/creatinina en orina y TFG estimada.",
+        "La etapa final combina ambas categorías (por ejemplo, G3a/A2)."
+      ],
+      "fuentes": ["kdigo_erc_2024", "ada_soc"]
+    },
+    {
+      "organo": "nervios",
+      "complicacion": "Neuropatía periférica diabética",
+      "mecanismo": "La glucosa alta daña los nervios y los vasos que los alimentan. Afecta primero a los nervios más largos, por eso empieza en los pies y sube (patrón \"en calcetín y guante\"): hormigueo, ardor, dolor o pérdida de sensibilidad. Sin sensibilidad, las heridas pasan desapercibidas y pueden convertirse en úlceras.",
+      "escalas": [
+        {
+          "id": "dyck",
+          "nombre": "Etapas de polineuropatía (Dyck)",
+          "fuente": "dyck_1988",
+          "etapas": [
+            { "id": "n0", "nombre": "N0", "descripcion": "Sin neuropatía.", "nivel": "normal" },
+            { "id": "n1", "nombre": "N1", "descripcion": "Neuropatía sin síntomas: solo se detecta con pruebas.", "nivel": "leve" },
+            { "id": "n2", "nombre": "N2", "descripcion": "Neuropatía con síntomas (hormigueo, dolor, pérdida de sensibilidad).", "nivel": "moderada" },
+            { "id": "n3", "nombre": "N3", "descripcion": "Neuropatía incapacitante.", "nivel": "severa" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "Al diagnóstico de diabetes tipo 2 y luego cada año.",
+        "Pruebas: sensibilidad al pinchazo o a la temperatura, vibración con diapasón de 128 Hz y monofilamento de 10 g en los pies."
+      ],
+      "fuentes": ["dyck_1988", "ada_soc"]
+    },
+    {
+      "organo": "corazon",
+      "complicacion": "Enfermedad cardiovascular e insuficiencia cardíaca",
+      "mecanismo": "La diabetes acelera la aterosclerosis (placas de grasa en las arterias), sobre todo si se suma a presión alta y colesterol elevado, y aumenta el riesgo de infarto. También puede dañar directamente el músculo del corazón y llevar a insuficiencia cardíaca. Es la principal causa de muerte en personas con diabetes.",
+      "escalas": [
+        {
+          "id": "ic_etapas",
+          "nombre": "Etapas de insuficiencia cardíaca (AHA/ACC/HFSA)",
+          "fuente": "aha_acc_ic_2022",
+          "etapas": [
+            { "id": "a", "nombre": "A — En riesgo", "descripcion": "Factores de riesgo (la diabetes es uno) sin daño en el corazón ni síntomas.", "nivel": "normal" },
+            { "id": "b", "nombre": "B — Pre-insuficiencia", "descripcion": "Cambios en la estructura o función del corazón, sin síntomas.", "nivel": "leve" },
+            { "id": "c", "nombre": "C — Insuficiencia sintomática", "descripcion": "Síntomas actuales o previos (falta de aire, cansancio, hinchazón).", "nivel": "moderada" },
+            { "id": "d", "nombre": "D — Avanzada", "descripcion": "Síntomas importantes que interfieren con la vida diaria pese al tratamiento.", "nivel": "severa" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "Evaluar los factores de riesgo cardiovascular al menos una vez al año (presión arterial en cada consulta, colesterol, tabaquismo).",
+        "En algunas personas puede considerarse medir péptidos natriuréticos (BNP o NT-proBNP) para detectar insuficiencia en etapa temprana."
+      ],
+      "fuentes": ["aha_acc_ic_2022", "ada_soc"]
+    },
+    {
+      "organo": "higado",
+      "complicacion": "Hígado graso asociado a disfunción metabólica (MASLD)",
+      "mecanismo": "La resistencia a la insulina favorece que se acumule grasa en el hígado. En algunas personas aparece inflamación (esteatohepatitis, MASH) que puede producir cicatrices (fibrosis) y llegar a cirrosis. A su vez, el hígado graso empeora la resistencia a la insulina: un círculo vicioso. Antes se llamaba \"hígado graso no alcohólico\".",
+      "escalas": [
+        {
+          "id": "masld",
+          "nombre": "Espectro de la enfermedad hepática esteatósica",
+          "fuente": "rinella_2023",
+          "etapas": [
+            { "id": "sin_esteatosis", "nombre": "Sin esteatosis", "descripcion": "Sin acumulación significativa de grasa.", "nivel": "normal" },
+            { "id": "esteatosis", "nombre": "Esteatosis (MASLD)", "descripcion": "Grasa acumulada en el hígado, sin inflamación importante.", "nivel": "leve" },
+            { "id": "mash", "nombre": "Esteatohepatitis (MASH)", "descripcion": "Grasa con inflamación y daño de las células del hígado.", "nivel": "moderada" },
+            { "id": "fibrosis_cirrosis", "nombre": "Fibrosis avanzada o cirrosis", "descripcion": "Cicatrices extensas que alteran la estructura y función del hígado.", "nivel": "severa" }
+          ]
+        }
+      ],
+      "deteccion": [
+        "En diabetes tipo 2 o prediabetes con factores de riesgo: calcular el índice FIB-4 (edad, AST, ALT y plaquetas) para estimar el riesgo de fibrosis.",
+        "Si el riesgo es intermedio o alto, se suele complementar con elastografía."
+      ],
+      "fuentes": ["rinella_2023", "ada_soc"]
+    }
+  ]
+}
