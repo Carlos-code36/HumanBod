@@ -11,6 +11,55 @@ Complemento de [PLAN.md](PLAN.md). En cada fase se listan los **escenarios** que
 
 ---
 
+## Estado de los escenarios
+
+Actualizado al cerrar la Fase 4. Las pruebas automáticas citan el ID del escenario en su nombre (buscar "F3-13" en `tests/`).
+
+**Leyenda:** ✅ cubierto con prueba automática · 📸 verificado con capturas de pantalla · ⏳ pendiente de revisión manual del usuario · ⬜ fase no iniciada
+
+| Fase | Escenario | Estado | Cómo se verificó |
+|---|---|---|---|
+| 0 | F0-01 `npm run dev` | ✅ | El servidor responde (comprobado por línea de comandos) |
+| 0 | F0-02 `npm test` | ✅ | Se ejecuta en cada cierre de fase |
+| 0 | F0-03 `npm run build` | ✅ | Se ejecuta en cada cierre de fase |
+| 1 | F1-01 Cargar la app y ver el cuerpo | 📸 | Capturas a varios anchos |
+| 1 | F1-02 Clic en un órgano | ✅ ⏳ | Lógica de selección probada; **el clic con mouse en el 3D falta probarlo a mano** |
+| 1 | F1-03 Clic en el fondo / Esc | ✅ ⏳ | Lógica probada; **falta probarlo a mano** |
+| 1 | F1-04 Órgano tapado por otro | ⏳ | Resuelto con la lista lateral; **falta probarlo a mano** |
+| 1 | F1-05 Color por nivel | ✅ | `afectacion.test.ts` |
+| 1 | F1-06 Nivel inválido → gris | ✅ | `afectacion.test.ts` |
+| 1 | F1-07 Girar y zoom en los extremos | ⏳ | Límites de cámara configurados; **falta probarlo a mano** |
+| 1 | F1-08 Ventana pequeña | 📸 ⏳ | Diseño a una columna verificado; el 3D en ventana angosta salió intermitente en capturas automáticas (ver problemas) |
+| 2 | F2-01 a F2-04 Validación del JSON | ✅ | `disease.test.ts` |
+| 2 | F2-05 Panel de órgano afectado | ✅ | `app.test.tsx` (interfaz) |
+| 2 | F2-06 Órgano sin afectación | ✅ | `app.test.tsx` (interfaz) |
+| 2 | F2-07 Texto largo en el panel | ⏳ | El panel tiene desplazamiento interno; **falta probarlo a mano** |
+| 3 | F3-01 a F3-05 Formulario | ✅ | `formValues.test.ts`, `unidades.test.ts`, `app.test.tsx` |
+| 3 | F3-10 a F3-15 FINDRISC | ✅ | `findrisc.test.ts`, `evaluar.test.ts` |
+| 3 | F3-20 a F3-24 KDIGO | ✅ | `kidney.test.ts` |
+| 3 | F3-30 a F3-32 Resultado general | ✅ | `evaluar.test.ts` |
+| 4 | F4-01 a F4-07 Simulación | ✅ | `bergman.test.ts`, `simulation.test.tsx` |
+| 5 | F5-01 a F5-07 Anatomía real | ⬜ | — |
+| 6 | F6-01 a F6-06 Escritorio | ⬜ | — |
+
+**Comprobación de que las pruebas detectan errores:** se introdujeron errores a propósito y las pruebas los detectaron. En FINDRISC, `<=` cambiado por `<` en el límite de IMC 30 (falló F3-13). En KDIGO, `>=` por `>` en TFG 60 (falló F3-20). En la simulación, Runge-Kutta 4 reemplazado por Euler (fallaron los 3 casos de F4-05).
+
+### Problemas encontrados durante el desarrollo
+
+| Fase | Problema | Cómo se resolvió |
+|---|---|---|
+| 0 | Vitest falla si la carpeta se abre como `c:\` (minúscula) | `scripts/vitest.mjs` (detalle en la tabla de la Fase 0) |
+| 1 | Los pies del cuerpo salían cortados | Cámara más alejada y centrada más abajo |
+| 1 | El canvas 3D ignoraba la altura del CSS (React Three Fiber pone `height: 100%` en línea) | Contenedor `.viewer-box` con altura fija |
+| 1 | En capturas automáticas (Chrome sin ventana) el 3D a veces sale vacío | Problema de la herramienta de captura, no de la app: la misma captura repetida a veces sí lo muestra. Revisar a mano en F1-08 |
+| 3 | Los campos de laboratorio con selector de unidad se salían del panel | Columnas más anchas y selector de unidad con ancho fijo |
+| 3 | Concordancia: decía "Riesgo muy alta" | Etiquetas de FINDRISC en masculino ("Riesgo muy alto") |
+| 3 | Las categorías salían "G3A" | Formato de la guía KDIGO: "G3a/A2" |
+| 4 | Primera calibración irreal (pico de 190 mg/dL en persona sana) | Absorción y secreción recalibradas (ver PLAN.md, Fase 4) |
+| 4 | El pico de glucosa tocaba el borde superior de la gráfica | Margen del ~15 % en el eje Y |
+
+---
+
 ## Factories: datos de prueba reutilizables
 
 En lugar de escribir un paciente completo en cada prueba, se usa una **factory**: una función que crea un paciente válido por defecto y permite cambiar solo lo que interesa.
