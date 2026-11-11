@@ -4,5 +4,11 @@
   { "id": "higado", "nombre": "Hígado", "sistema": "digestivo", "mesh": "liver" },
   { "id": "pancreas", "nombre": "Páncreas", "sistema": "endocrino", "mesh": "pancreas" },
   { "id": "rinones", "nombre": "Riñones", "sistema": "urinario", "mesh": "kidneys" },
-  { "id": "nervios", "nombre": "Nervios periféricos", "sistema": "nervioso", "mesh": "nerves" }
+  {
+    "id": "nervios",
+    "nombre": "Nervios periféricos",
+    "sistema": "nervioso",
+    "mesh": "nerves",
+    "nota": "En el cuerpo 3D los nervios están dibujados de forma esquemática: el modelo anatómico no los incluye."
+  }
 ]

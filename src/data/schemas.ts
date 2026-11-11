@@ -17,6 +17,8 @@ export const OrganSchema = z.object({
   sistema: Texto,
   /** Nombre de la pieza en el modelo 3D. */
   mesh: Texto,
+  /** Aclaración que se muestra en el panel (por ejemplo, si la pieza 3D es esquemática). */
+  nota: z.string().optional(),
 })
 
 export const OrgansSchema = z

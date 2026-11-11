@@ -74,6 +74,13 @@ function App() {
           <OrganPanel disease={DIABETES_T2} />
         </div>
       </div>
+
+      <footer className="creditos">
+        Modelo anatómico 3D: <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/" target="_blank" rel="noreferrer">BodyParts3D</a>,
+        © The Database Center for Life Science, bajo licencia Creative Commons (
+        <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" target="_blank" rel="noreferrer">ver licencia</a>
+        ). Modificado: piezas seleccionadas, polígonos reducidos y nervios periféricos dibujados de forma esquemática.
+      </footer>
     </div>
   )
 }

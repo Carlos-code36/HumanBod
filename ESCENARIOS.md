@@ -13,9 +13,9 @@ Complemento de [PLAN.md](PLAN.md). En cada fase se listan los **escenarios** que
 
 ## Estado de los escenarios
 
-Actualizado al cerrar la Fase 4. Las pruebas automáticas citan el ID del escenario en su nombre (buscar "F3-13" en `tests/`).
+Actualizado al cerrar la Fase 5. Las pruebas automáticas citan el ID del escenario en su nombre (buscar "F3-13" en `tests/`).
 
-**Leyenda:** ✅ cubierto con prueba automática · 📸 verificado con capturas de pantalla · ⏳ pendiente de revisión manual del usuario · ⬜ fase no iniciada
+**Leyenda:** ✅ cubierto con prueba automática · 🖱️ verificado en Chrome real con interacción automatizada (puppeteer: clics, teclado, rueda, arrastre) · 📸 verificado con capturas de pantalla · ⏳ pendiente de revisión manual del usuario · ⬜ fase no iniciada
 
 | Fase | Escenario | Estado | Cómo se verificó |
 |---|---|---|---|
@@ -23,13 +23,13 @@ Actualizado al cerrar la Fase 4. Las pruebas automáticas citan el ID del escena
 | 0 | F0-02 `npm test` | ✅ | Se ejecuta en cada cierre de fase |
 | 0 | F0-03 `npm run build` | ✅ | Se ejecuta en cada cierre de fase |
 | 1 | F1-01 Cargar la app y ver el cuerpo | 📸 | Capturas a varios anchos |
-| 1 | F1-02 Clic en un órgano | ✅ ⏳ | Lógica de selección probada; **el clic con mouse en el 3D falta probarlo a mano** |
-| 1 | F1-03 Clic en el fondo / Esc | ✅ ⏳ | Lógica probada; **falta probarlo a mano** |
-| 1 | F1-04 Órgano tapado por otro | ⏳ | Resuelto con la lista lateral; **falta probarlo a mano** |
+| 1 | F1-02 Clic en un órgano | ✅ 🖱️ | Clic en el modelo real: selecciona el órgano y muestra su etiqueta |
+| 1 | F1-03 Clic en el fondo / Esc | ✅ 🖱️ | Clic en el fondo y tecla Esc quitan la selección |
+| 1 | F1-04 Órgano tapado por otro | ⏳ | Resuelto con la lista lateral y la opción "Mostrar piel"; **falta probarlo a mano** |
 | 1 | F1-05 Color por nivel | ✅ | `afectacion.test.ts` |
 | 1 | F1-06 Nivel inválido → gris | ✅ | `afectacion.test.ts` |
-| 1 | F1-07 Girar y zoom en los extremos | ⏳ | Límites de cámara configurados; **falta probarlo a mano** |
-| 1 | F1-08 Ventana pequeña | 📸 ⏳ | Diseño a una columna verificado; el 3D en ventana angosta salió intermitente en capturas automáticas (ver problemas) |
+| 1 | F1-07 Girar y zoom en los extremos | 🖱️ | Rueda al máximo y al mínimo, y arrastre para girar: la cámara no atraviesa el cuerpo y el zoom apunta a los órganos |
+| 1 | F1-08 Ventana pequeña | 🖱️ | A 600 px de ancho el modelo se ve completo (la intermitencia anterior era de la herramienta de captura) |
 | 2 | F2-01 a F2-04 Validación del JSON | ✅ | `disease.test.ts` |
 | 2 | F2-05 Panel de órgano afectado | ✅ | `app.test.tsx` (interfaz) |
 | 2 | F2-06 Órgano sin afectación | ✅ | `app.test.tsx` (interfaz) |
@@ -39,7 +39,13 @@ Actualizado al cerrar la Fase 4. Las pruebas automáticas citan el ID del escena
 | 3 | F3-20 a F3-24 KDIGO | ✅ | `kidney.test.ts` |
 | 3 | F3-30 a F3-32 Resultado general | ✅ | `evaluar.test.ts` |
 | 4 | F4-01 a F4-07 Simulación | ✅ | `bergman.test.ts`, `simulation.test.tsx` |
-| 5 | F5-01 a F5-07 Anatomía real | ⬜ | — |
+| 5 | F5-01 Cargar `body.glb` | 🖱️ ✅ | Se ve completo; pruebas de orientación anatómica (corazón a la izquierda del paciente, hígado a la derecha, riñones detrás) en `modelo3d.test.ts` |
+| 5 | F5-02 Cada pieza de `organs.json` existe en el `.glb` | ✅ | `modelo3d.test.ts` |
+| 5 | F5-03 Peso del archivo | ✅ | 1.9 MB (límite 15 MB) |
+| 5 | F5-04 Indicador mientras carga | 🖱️ | "Cargando modelo anatómico… N %" |
+| 5 | F5-05 El modelo no carga | 🖱️ | Archivo ocultado a propósito: aparece el cuerpo esquemático con los colores del paciente, sin bloquear la app |
+| 5 | F5-06 Rendimiento en una PC modesta | ⏳ | Solo probado con gráficos por software; **falta probarlo en tu PC** |
+| 5 | F5-07 Créditos de licencia visibles | 📸 | Pie de página y `public/models/CREDITOS.md` |
 | 6 | F6-01 a F6-06 Escritorio | ⬜ | — |
 
 **Comprobación de que las pruebas detectan errores:** se introdujeron errores a propósito y las pruebas los detectaron. En FINDRISC, `<=` cambiado por `<` en el límite de IMC 30 (falló F3-13). En KDIGO, `>=` por `>` en TFG 60 (falló F3-20). En la simulación, Runge-Kutta 4 reemplazado por Euler (fallaron los 3 casos de F4-05).
@@ -57,6 +63,14 @@ Actualizado al cerrar la Fase 4. Las pruebas automáticas citan el ID del escena
 | 3 | Las categorías salían "G3A" | Formato de la guía KDIGO: "G3a/A2" |
 | 4 | Primera calibración irreal (pico de 190 mg/dL en persona sana) | Absorción y secreción recalibradas (ver PLAN.md, Fase 4) |
 | 4 | El pico de glucosa tocaba el borde superior de la gráfica | Margen del ~15 % en el eje Y |
+| 5 | No hay Blender | Conversión propia con `gltf-transform` + `meshoptimizer` (`scripts/build-anatomy.mjs`) |
+| 5 | BodyParts3D no incluye nervios de brazos y piernas | Nervios esquemáticos trazados con los huesos, con aviso en el panel y en los créditos |
+| 5 | Licencia distinta en la web (CC BY 4.0) y en los archivos (CC BY-SA 2.1 JP) | Se cumplen ambas (ver `CREDITOS.md`) |
+| 5 | Ids de archivo con sufijo "M" (`FJ1656M`) rechazados por la validación | Formato permitido `FJ1234` o `FJ1234M` |
+| 5 | "Maximum call stack size exceeded" al unir mallas grandes | Copiar con bucles en vez de `push(...arr)` |
+| 5 | Las pruebas usan módulos de Node y la app no tiene esos tipos | `tsconfig.test.json` separado: la app sigue sin acceso a Node |
+| 5 | **Etiqueta del órgano vacía** si se seleccionaba antes de cargar el modelo (error "removeChild") | Se dejó de usar `<Html>` de drei: la etiqueta es HTML normal y se proyecta desde 3D cada cuadro |
+| 5 | El zoom apuntaba a la pelvis | Centro de giro movido al tronco (1.05 m) |
 
 ---
 
@@ -254,7 +268,7 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 
 ---
 
-## Fase 5 — Anatomía real (Blender → `.glb`)
+## Fase 5 — Anatomía real (BodyParts3D → `.glb`, sin Blender)
 
 ### Escenarios
 | ID | Escenario | Esperado | Tipo |
@@ -270,10 +284,10 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 ### Problemas posibles
 | Problema | Prevención |
 |---|---|
-| Nombres de piezas en Blender que no coinciden | Convención de nombres documentada y prueba F5-02 |
+| Nombres de piezas del modelo que no coinciden | Convención de nombres documentada y prueba F5-02 |
 | Modelo muy pesado | Reducir polígonos (Decimate) y comprimir con Draco |
 | Órganos internos tapados por piel o músculo | Capas que se pueden mostrar u ocultar |
-| Incumplir la licencia CC BY-SA | Créditos y licencia en el repositorio y en la app |
+| Incumplir la licencia del modelo | Créditos y licencia en el repositorio y en la app |
 
 ---
 

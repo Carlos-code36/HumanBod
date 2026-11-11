@@ -574,3 +574,55 @@ details summary {
   padding-left: 1.1rem;
   font-size: 0.9rem;
 }
+
+/* Visor: controles superpuestos */
+.viewer-toggle {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.75rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-bg);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.viewer-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.creditos {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.creditos a {
+  color: inherit;
+}
+
+/* Etiqueta del órgano seleccionado, proyectada desde 3D (ver SeguirEtiqueta) */
+.organ-label-3d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: -6px;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.organ-label-3d[hidden] {
+  display: none;
+}

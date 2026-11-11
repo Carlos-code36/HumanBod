@@ -71,6 +71,7 @@ export default function OrganPanel({ disease }: { disease: Disease }) {
           <p className="muted">
             Sistema {organ.sistema} · Afectación actual: <strong>{etiquetaDeNivel(nivel)}</strong>
           </p>
+          {organ.nota && <p className="muted small">{organ.nota}</p>}
 
           <h3>{afectacion.complicacion}</h3>
 

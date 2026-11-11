@@ -27,7 +27,7 @@ Construir una aplicación (web primero, escritorio después) que:
 | Lenguaje | TypeScript | Tipado: menos errores en datos médicos y cálculos |
 | Interfaz | React + Vite | Estándar, rápido, mucha documentación |
 | 3D | Three.js + React Three Fiber + Drei | Cuerpo 3D interactivo en el navegador |
-| Modelos 3D | Z-Anatomy / BodyParts3D → Blender → `.glb` | Gratis, licencia abierta (CC BY-SA: dar crédito) |
+| Modelos 3D | BodyParts3D → `scripts/build-anatomy.mjs` (gltf-transform + meshoptimizer, **sin Blender**) → `.glb` | Gratis, licencia abierta (dar crédito; ver `public/models/CREDITOS.md`) |
 | Estilos | CSS Modules o Tailwind | Sencillo de mantener |
 | Gráficas | Recharts | Curvas de glucosa e insulina, progresión |
 | Estado | Zustand | Estado global simple (paciente, órgano seleccionado) |
@@ -196,10 +196,17 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 **Entregable:** simulador educativo de glucosa.
 
 ### Fase 5 — Anatomía real
-- [ ] Descargar Z-Anatomy o BodyParts3D
-- [ ] En Blender: seleccionar órganos, reducir polígonos, nombrar piezas, exportar `.glb`
-- [ ] Reemplazar las figuras simples por el modelo real
-- [ ] Agregar los créditos de licencia en la app
+- [x] Descargar BodyParts3D 4.0 (árbol PART-OF, 62 MB; no se guarda en el repositorio)
+- [x] **Sin Blender:** `scripts/build-anatomy.mjs` selecciona órganos por concepto FMA, cambia ejes y unidades, reduce polígonos y exporta `public/models/body.glb` (1.9 MB)
+- [x] Nervios periféricos **esquemáticos** (BodyParts3D no incluye nervios de brazos y piernas): tubos que siguen húmero–radio y fémur–tibia, con aviso en el panel
+- [x] Reemplazar las figuras simples por el modelo real; las figuras quedan como respaldo si el modelo no carga
+- [x] Piel translúcida con opción "Mostrar piel"; indicador de carga con porcentaje
+- [x] Agregar los créditos de licencia en la app (pie de página) y en `public/models/CREDITOS.md`
+
+**Licencia (verificada en noviembre de 2026):** la página oficial indica **CC BY 4.0**, pero los archivos OBJ llevan en su encabezado **CC BY-SA 2.1 Japón**. Se cumplen ambas: crédito y misma licencia para el modelo derivado (solo el modelo, no el código).
+
+**Para regenerar el modelo:** descargar `partof_BP3D_4.0_obj_99.zip` y `partof_element_parts.txt` (enlaces en el encabezado del script) y ejecutar
+`node scripts/build-anatomy.mjs <carpeta-obj> <partof_element_parts.txt>`.
 
 **Entregable:** cuerpo anatómico real.
 
@@ -219,8 +226,8 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 |---|---|
 | Información médica incorrecta | Citar fuente en cada regla, pruebas automáticas, revisión por profesional |
 | Se interprete como diagnóstico | Aviso visible, lenguaje de "estimación educativa" |
-| Modelos 3D pesados o lentos | Reducir polígonos en Blender, cargar progresivamente |
-| Licencias de modelos 3D | Respetar CC BY-SA: créditos y misma licencia para los modelos derivados |
+| Modelos 3D pesados o lentos | Reducir polígonos con meshoptimizer (1.9 MB en total), carga diferida con indicador |
+| Licencias de modelos 3D | Créditos visibles en la app y en `CREDITOS.md`; misma licencia para el modelo derivado |
 | Alcance que crece demasiado | Una enfermedad hasta terminar la fase 4; recién después, agregar otras |
 
 ---
@@ -238,5 +245,5 @@ El modelo de datos está pensado para reutilizarse:
 - KDIGO — *Clinical Practice Guideline for Diabetes Management in CKD* y clasificación de ERC
 - Lindström J, Tuomilehto J. *The Diabetes Risk Score* (FINDRISC). Diabetes Care, 2003
 - Bergman RN et al. *Quantitative estimation of insulin sensitivity*. Am J Physiol, 1979
-- Z-Anatomy / BodyParts3D — modelos 3D y licencias
+- BodyParts3D — https://dbarchive.biosciencedbc.jp/en/bodyparts3d/ (licencia: /en/bodyparts3d/lic.html)
 - Documentación: React Three Fiber, Three.js, Vite, Tauri
