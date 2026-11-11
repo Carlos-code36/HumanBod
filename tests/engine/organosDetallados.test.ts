@@ -83,6 +83,18 @@ const CASOS: Caso[] = [
     tolerancia: 0.01,
     maxMB: 3,
   },
+  {
+    archivo: 'kidneys.glb',
+    nodo: 'kidneys',
+    principal: 'rinones',
+    piezas: ['rinones', 'glandulas_suprarrenales', 'arterias_renales', 'ureteres', 'aorta_abdominal', 'vena_cava_inferior'],
+    rojos: ['arterias_renales', 'aorta_abdominal'],
+    azules: ['vena_cava_inferior'],
+    largo: [0.15, 0.24],
+    lado: 0,
+    tolerancia: 0.01,
+    maxMB: 3,
+  },
 ]
 
 const cuerpo = new Map<string, Caja>()

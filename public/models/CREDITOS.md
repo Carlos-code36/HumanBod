@@ -1,4 +1,4 @@
-# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`, `pancreas.glb`)
+# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`, `pancreas.glb`, `kidneys.glb`)
 
 **BodyParts3D, © The Database Center for Life Science.**
 https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
@@ -55,3 +55,14 @@ Generado con Blender mediante `scripts/blender/build-pancreas.py`, a partir de l
   tronco de la arteria mesentérica superior (FMA66358); aorta abdominal (FMA3789) recortada a la altura del
   páncreas; vena porta extrahepática (FMA71904, FMA50735).
 - Color, lóbulos y relieve: **texturas procedurales propias**, horneadas en Blender.
+
+### `kidneys.glb` (riñones detallados)
+
+Generado con Blender mediante `scripts/blender/build-kidneys.py`, a partir de los mismos archivos:
+
+- Riñón derecho e izquierdo (FMA7204, FMA7205): subdivididos, remallados y suavizados.
+- Glándulas suprarrenales (FMA15629, FMA15630); arterias renales (FMA14752, FMA14753); aorta abdominal
+  (FMA3789) y vena cava inferior (FMA10951) recortadas a la altura de los riñones.
+- **Uréteres (FMA15571, FMA15572) reconstruidos** como tubos de ~4 mm que siguen el eje de la malla original
+  (la del derecho está abierta); solo los primeros 7 cm.
+- Color, capilares y relieve: **texturas procedurales propias**, horneadas en Blender.

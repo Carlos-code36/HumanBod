@@ -234,10 +234,16 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
   - Parénquima (cabeza, cuerpo y cola) con textura lobulada (lóbulos de ~4 mm con surcos suaves)
   - Contexto como en los atlas: duodeno (la "C" alrededor de la cabeza), arteria esplénica (cortada al final de la cola, porque el modelo no tiene bazo), tronco celíaco, arteria mesentérica superior, aorta abdominal y vena porta
 - [x] Revisión del páncreas por el usuario (aprobado el 11 de noviembre de 2026)
-- [ ] Riñones y ojos con el mismo proceso
+- [x] **Riñones** — `scripts/blender/build-kidneys.py` → `public/models/kidneys.glb` (0.6 MB):
+  - BodyParts3D trae cada riñón como una malla de baja resolución (facetada): se subdivide, se remalla y se suaviza conservando la forma y el hilio
+  - Cápsula brillante con manchas suaves y capilares finos
+  - Contexto: glándulas suprarrenales, arterias renales, uréteres (primeros 7 cm), aorta abdominal y vena cava inferior. **BodyParts3D no incluye las venas renales**
+  - Uréteres reconstruidos como tubos de ~4 mm que siguen su eje (`tubo_por_eje` en `comun.py`): la parte baja del derecho viene abierta en BodyParts3D y el remallado la perdía
+- [x] Revisión de los riñones por el usuario (aprobado el 11 de noviembre de 2026)
+- [ ] Ojos con el mismo proceso
 - [ ] Nervios: hoy son esquemáticos; un trazado más realista requiere otra fuente de datos
 
-**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py` o `build-pancreas.py`):
+**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py`, `build-pancreas.py` o `build-kidneys.py`):
 `"C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" -b --factory-startup -P scripts/blender/build-heart.py -- <carpeta-obj> <partof_element_parts.txt> [--preview <carpeta>]`
 (`--preview` guarda imágenes renderizadas de frente, de lado, de atrás y de cerca). Tarda unos 45 s.
 

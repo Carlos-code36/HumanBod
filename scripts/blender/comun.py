@@ -201,6 +201,41 @@ def vaso(nombre, fjs, voxel_mm=0.6, objetivo=5000, engrosar_mm=0.0, dentro=None,
     return ob
 
 
+def tubo_por_eje(nombre, fjs, radio_mm, paso_mm=4.0, z_min=None):
+    """
+    Tubo que sigue el eje de un conducto (uréter, por ejemplo). Sirve cuando la malla original está
+    abierta o rota y el remallado la pierde: se corta en franjas horizontales, se toma el centro de cada
+    franja, se suaviza esa línea y se barre un círculo a lo largo de ella.
+    """
+    tmp = crear(nombre + "_tmp", fjs)
+    puntos = [v.co.copy() for v in tmp.data.vertices if z_min is None or v.co.z >= z_min]
+    bpy.data.objects.remove(tmp)
+    paso = paso_mm / 1000
+    franjas = defaultdict(list)
+    for p in puntos:
+        franjas[round(p.z / paso)].append(p)
+    eje = [sum(ps, Vector()) / len(ps) for _, ps in sorted(franjas.items(), reverse=True)]
+    # Promedio móvil de 5 franjas: quita los saltos donde el conducto se ensancha (pelvis renal).
+    suave_eje = [sum(eje[max(0, i - 2):i + 3], Vector()) / len(eje[max(0, i - 2):i + 3]) for i in range(len(eje))]
+    curva = bpy.data.curves.new(nombre, "CURVE")
+    curva.dimensions = "3D"
+    curva.bevel_depth = radio_mm / 1000
+    curva.bevel_resolution = 3
+    curva.use_fill_caps = True
+    spline = curva.splines.new("POLY")
+    spline.points.add(len(suave_eje) - 1)
+    for punto, co in zip(spline.points, suave_eje):
+        punto.co = (co.x, co.y, co.z, 1)
+    ob = bpy.data.objects.new(nombre, curva)
+    bpy.context.scene.collection.objects.link(ob)
+    activar(ob)
+    bpy.ops.object.convert(target="MESH")
+    ob = bpy.context.view_layer.objects.active
+    ob.name = ob.data.name = nombre
+    suave(ob)
+    return ob
+
+
 def centro_de(ob):
     return sum((v.co for v in ob.data.vertices), Vector()) / len(ob.data.vertices)
 
