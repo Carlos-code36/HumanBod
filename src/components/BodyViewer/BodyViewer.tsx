@@ -1,7 +1,8 @@
 import { OrbitControls, useGLTF, useProgress } from '@react-three/drei'
-import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber'
+import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import { Component, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react'
-import { FrontSide, Mesh, Vector3, type BufferGeometry } from 'three'
+import { Color, FrontSide, Mesh, MeshStandardMaterial, Vector3, type BufferGeometry } from 'three'
+import type { OrbitControls as ControlesOrbita } from 'three-stdlib'
 import { ORGANS, findOrgan } from '../../data/organs'
 import { colorDeNivel } from '../../engine/afectacion'
 import { useAppStore } from '../../store/useAppStore'
@@ -13,6 +14,14 @@ export const MODELO_URL = `${import.meta.env.BASE_URL}models/body.glb`
 
 /** Centro del tronco (donde están los órganos): la cámara gira y se acerca hacia este punto. */
 const TARGET: [number, number, number] = [0, 1.05, 0]
+
+/**
+ * Órganos con un modelo detallado propio, hecho con Blender (scripts/blender/build-heart.py).
+ * Reemplazan a la pieza simple de body.glb; si el archivo no carga, se usa la pieza simple.
+ */
+const MODELOS_DETALLADOS: Readonly<Record<string, string>> = {
+  heart: `${import.meta.env.BASE_URL}models/heart.glb`,
+}
 
 // ---------- Etiqueta del órgano seleccionado ----------
 // Es un elemento HTML normal encima del canvas; cada cuadro se proyecta la posición 3D a la pantalla.
@@ -50,13 +59,73 @@ function SeguirEtiqueta({ etiquetaRef }: { etiquetaRef: RefObject<HTMLDivElement
   return null
 }
 
+// ---------- La cámara se centra en el órgano elegido ----------
+// Al elegir un órgano (en el 3D, la lista o los resultados) la cámara gira hacia él y se acerca,
+// para ver el detalle. Al quitar la selección vuelve a apuntar al tronco. Si la persona arrastra
+// o hace zoom durante el movimiento, se cancela.
+
+/** Distancia de la cámara al órgano enfocado (m). */
+const DISTANCIA_ENFOQUE = 0.7
+
+function EnfocarOrgano() {
+  const puntos = useContext(PuntosEtiqueta)
+  const controles = useThree((s) => s.controls) as ControlesOrbita | null
+  const destino = useRef<{ objetivo: Vector3; distancia: number | null } | null>(null)
+
+  useEffect(
+    () =>
+      useAppStore.subscribe((s, antes) => {
+        if (s.selectedOrganId === antes.selectedOrganId) return
+        const p = s.selectedOrganId ? puntos.get(s.selectedOrganId) : undefined
+        // El punto de la etiqueta está sobre el órgano: se baja un poco para apuntar a su centro.
+        destino.current = p
+          ? { objetivo: new Vector3(p[0], p[1] - 0.08, p[2]), distancia: DISTANCIA_ENFOQUE }
+          : { objetivo: new Vector3(...TARGET), distancia: null }
+      }),
+    [puntos],
+  )
+
+  useEffect(() => {
+    if (!controles) return
+    const cancelar = () => (destino.current = null)
+    controles.addEventListener('start', cancelar)
+    return () => controles.removeEventListener('start', cancelar)
+  }, [controles])
+
+  useFrame(({ camera }, dt) => {
+    const d = destino.current
+    if (!controles || !d) return
+    const k = 1 - Math.exp(-Math.min(dt, 0.1) * 5)
+    // La cámara se mueve junto con el objetivo para no dar un giro brusco.
+    const antes = controles.target.clone()
+    controles.target.lerp(d.objetivo, k)
+    camera.position.add(controles.target.clone().sub(antes))
+    const dir = camera.position.clone().sub(controles.target)
+    const actual = dir.length()
+    if (d.distancia !== null && actual > d.distancia) {
+      camera.position.copy(controles.target).add(dir.setLength(actual + (d.distancia - actual) * k))
+    }
+    controles.update()
+    const llego = controles.target.distanceTo(d.objetivo) < 0.002
+    const cerca = d.distancia === null || camera.position.distanceTo(controles.target) <= d.distancia + 0.005
+    if (llego && cerca) destino.current = null
+  })
+  return null
+}
+
 // ---------- Interacción común (figuras simples y modelo real) ----------
+
+/** Cómo se ve el órgano ahora: color del nivel de afectación y brillo (seleccionado / bajo el puntero). */
+interface EstadoVisual {
+  color: string
+  glow: number
+}
 
 interface OrganInteractivoProps {
   organ: Organ
   /** Dónde poner la etiqueta con el nombre cuando está seleccionado. */
   etiqueta: [number, number, number] | undefined
-  children: (material: ReactNode) => ReactNode
+  children: (material: ReactNode, estado: EstadoVisual) => ReactNode
 }
 
 function OrganInteractivo({ organ, etiqueta, children }: OrganInteractivoProps) {
@@ -99,8 +168,75 @@ function OrganInteractivo({ organ, etiqueta, children }: OrganInteractivoProps) 
         document.body.style.cursor = ''
       }}
     >
-      {children(material)}
+      {children(material, { color, glow })}
     </group>
+  )
+}
+
+// ---------- Modelos detallados (Blender) ----------
+// Conservan sus materiales realistas (miocardio con textura, arterias rojas, venas azules).
+// El nivel de afectación se muestra como un brillo en el borde del órgano (efecto Fresnel)
+// y la selección añade un resplandor suave del mismo color.
+
+interface UniformesBorde {
+  uBordeColor: { value: Color }
+  uBordeFuerza: { value: number }
+}
+
+function conBorde(original: MeshStandardMaterial): MeshStandardMaterial {
+  const m = original.clone()
+  const u: UniformesBorde = { uBordeColor: { value: new Color() }, uBordeFuerza: { value: 0 } }
+  m.userData.borde = u
+  m.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, u)
+    shader.fragmentShader =
+      'uniform vec3 uBordeColor;\nuniform float uBordeFuerza;\n' +
+      shader.fragmentShader.replace(
+        '#include <emissivemap_fragment>',
+        `#include <emissivemap_fragment>
+        float bordeOrgano = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);
+        totalEmissiveRadiance += uBordeColor * uBordeFuerza * bordeOrgano;`,
+      )
+  }
+  m.customProgramCacheKey = () => 'organo-borde'
+  return m
+}
+
+/** Color del nivel en el borde; al seleccionar o pasar el puntero, brillo más fuerte y resplandor. */
+function aplicarEstado(materiales: MeshStandardMaterial[], estado: EstadoVisual) {
+  const c = new Color(estado.color)
+  for (const material of materiales) {
+    const u = material.userData.borde as UniformesBorde
+    u.uBordeColor.value.copy(c)
+    u.uBordeFuerza.value = 0.45 + estado.glow * 0.9
+    material.emissive.copy(c)
+    material.emissiveIntensity = estado.glow * 0.12
+  }
+}
+
+function PiezaDetallada({ url, estado }: { url: string; estado: EstadoVisual }) {
+  const { scene } = useGLTF(url)
+  const mallas = useMemo(() => {
+    const out: { nombre: string; geometria: BufferGeometry; material: MeshStandardMaterial }[] = []
+    scene.traverse((o) => {
+      if (o instanceof Mesh && o.material instanceof MeshStandardMaterial) {
+        out.push({ nombre: o.name, geometria: o.geometry as BufferGeometry, material: conBorde(o.material) })
+      }
+    })
+    if (out.length === 0) throw new Error(`El modelo ${url} no tiene mallas`)
+    return out
+  }, [scene, url])
+
+  useEffect(() => () => mallas.forEach((m) => m.material.dispose()), [mallas])
+
+  useEffect(() => aplicarEstado(mallas.map((m) => m.material), estado), [mallas, estado])
+
+  return (
+    <>
+      {mallas.map((m) => (
+        <mesh key={m.nombre} name={m.nombre} geometry={m.geometria} material={m.material} />
+      ))}
+    </>
   )
 }
 
@@ -185,7 +321,19 @@ function CuerpoAnatomico({ mostrarPiel }: { mostrarPiel: boolean }) {
       )}
       {piezas.map(({ organ, g, etiqueta }) => (
         <OrganInteractivo key={organ.id} organ={organ} etiqueta={etiqueta}>
-          {(material) => <mesh geometry={g}>{material}</mesh>}
+          {(material, estado) => {
+            const simple = <mesh geometry={g}>{material}</mesh>
+            const url = MODELOS_DETALLADOS[organ.mesh]
+            if (!url) return simple
+            // Si el modelo detallado falla o aún está cargando, se ve la pieza simple de body.glb.
+            return (
+              <RespaldoModelo respaldo={simple} aviso={`No se pudo cargar ${url}; se usa la pieza simple:`}>
+                <Suspense fallback={simple}>
+                  <PiezaDetallada url={url} estado={estado} />
+                </Suspense>
+              </RespaldoModelo>
+            )
+          }}
         </OrganInteractivo>
       ))}
     </group>
@@ -193,7 +341,7 @@ function CuerpoAnatomico({ mostrarPiel }: { mostrarPiel: boolean }) {
 }
 
 /** Si el modelo anatómico falla (no existe, está dañado o le falta una pieza), se muestra el esquemático. */
-class RespaldoModelo extends Component<{ children: ReactNode; respaldo: ReactNode }, { error: boolean }> {
+class RespaldoModelo extends Component<{ children: ReactNode; respaldo: ReactNode; aviso?: string }, { error: boolean }> {
   state = { error: false }
 
   static getDerivedStateFromError() {
@@ -201,7 +349,7 @@ class RespaldoModelo extends Component<{ children: ReactNode; respaldo: ReactNod
   }
 
   componentDidCatch(error: unknown) {
-    console.error('No se pudo cargar el modelo anatómico; se usa el esquemático:', error)
+    console.error(this.props.aviso ?? 'No se pudo cargar el modelo anatómico; se usa el esquemático:', error)
   }
 
   render() {
@@ -243,9 +391,10 @@ export default function BodyViewer() {
             </Suspense>
           </RespaldoModelo>
           <SeguirEtiqueta etiquetaRef={etiquetaRef} />
+          <EnfocarOrgano />
         </PuntosEtiqueta.Provider>
         {/* F1-07: límites para que la cámara no atraviese el cuerpo ni se aleje demasiado */}
-        <OrbitControls target={TARGET} enablePan={false} minDistance={0.5} maxDistance={5} enableDamping />
+        <OrbitControls makeDefault target={TARGET} enablePan={false} minDistance={0.5} maxDistance={5} enableDamping />
       </Canvas>
       <div ref={etiquetaRef} className="organ-label organ-label-3d" hidden aria-hidden="true" />
       <Cargando />
@@ -258,3 +407,4 @@ export default function BodyViewer() {
 }
 
 useGLTF.preload(MODELO_URL)
+for (const url of Object.values(MODELOS_DETALLADOS)) useGLTF.preload(url)

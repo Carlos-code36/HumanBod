@@ -46,6 +46,12 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5 | F5-05 El modelo no carga | 🖱️ | Archivo ocultado a propósito: aparece el cuerpo esquemático con los colores del paciente, sin bloquear la app |
 | 5 | F5-06 Rendimiento en una PC modesta | ⏳ | Solo probado con gráficos por software; **falta probarlo en tu PC** |
 | 5 | F5-07 Créditos de licencia visibles | 📸 | Pie de página y `public/models/CREDITOS.md` |
+| 5b | F5-08 Corazón detallado en su sitio | ✅ 🖱️ | `corazon3d.test.ts`: mismo centro que el corazón de `body.glb` (±1,5 cm), tamaño adulto, a la izquierda del paciente; visto en Chrome dentro del cuerpo, con y sin piel |
+| 5b | F5-09 Piezas y materiales del corazón | ✅ | `corazon3d.test.ts`: 7 piezas, miocardio con textura y mapa de normales, arterias rojas y venas azules |
+| 5b | F5-10 Nivel de afectación visible en el corazón detallado | 🖱️ | Paciente de ejemplo: borde amarillo con "Leve", sin tapar el tejido; gris tenue con "Sin datos" |
+| 5b | F5-11 `heart.glb` no carga | 🖱️ | Petición bloqueada a propósito: se ve el corazón simple de `body.glb`, la app sigue funcionando |
+| 5b | F5-12 La cámara enfoca el órgano elegido | 🖱️ | Al elegir "Corazón" la cámara se centra y se acerca; arrastrar cancela el movimiento |
+| 5b | F5-13 Revisión visual del corazón | ⏳ | **Falta tu revisión** |
 | 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | Pendientes |
 | 6 | F6-09 El 3D no se pierde al leer información | ✅ 🖱️ | Escritorio (1440×900) y celular (390×844): la página no hace scroll y el 3D queda fijo al desplazar el panel |
 | 6 | F6-10 Pestañas | ✅ | Clic y flechas del teclado; un solo panel visible (`layout.test.tsx`) |
@@ -76,6 +82,11 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5 | Las pruebas usan módulos de Node y la app no tiene esos tipos | `tsconfig.test.json` separado: la app sigue sin acceso a Node |
 | 5 | **Etiqueta del órgano vacía** si se seleccionaba antes de cargar el modelo (error "removeChild") | Se dejó de usar `<Html>` de drei: la etiqueta es HTML normal y se proyecta desde 3D cada cuadro |
 | 5 | El zoom apuntaba a la pelvis | Centro de giro movido al tronco (1.05 m) |
+| 5b | Los ventrículos salían pequeños y las coronarias "flotaban" fuera del corazón | BodyParts3D trae la cavidad (la sangre), no la pared: superficie reconstruida con la envolvente de cavidades y coronarias |
+| 5b | Demasiada grasa amarilla en toda la superficie | Grasa solo a menos de ~5 mm de las coronarias |
+| 5b | El color del nivel tapaba el tejido realista | El nivel se muestra como brillo de borde (Fresnel), más fuerte al seleccionar |
+| 5b | Al acercarse, el corazón quedaba fuera de la vista (la cámara apunta al abdomen) | La cámara se centra en el órgano elegido |
+| 5b | Avisos "Mesh is not valid" al exportar | `mesh.validate()` antes de exportar |
 | 6 | Al hacer scroll para leer, el 3D se perdía de vista | Rediseño: 3D fijo, panel lateral con pestañas y ventanas modales |
 | 6 | En celular la página quedaba 25 px más ancha que la pantalla | La columna de la página crecía para que cupiera el título sin saltos: `grid-template-columns: minmax(0, 1fr)` |
 | 6 | En celular el encabezado ocupaba un tercio de la pantalla | Encabezado en una franja con textos cortos; el 3D pasó de empezar a 127 px a 58 px |
@@ -297,6 +308,16 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | Modelo muy pesado | Reducir polígonos (Decimate) y comprimir con Draco |
 | Órganos internos tapados por piel o músculo | Capas que se pueden mostrar u ocultar |
 | Incumplir la licencia del modelo | Créditos y licencia en el repositorio y en la app |
+
+### Escenarios — Fase 5b: órganos detallados con Blender
+| ID | Escenario | Esperado | Tipo |
+|---|---|---|---|
+| F5-08 | Corazón detallado en su sitio | Coincide con el corazón de `body.glb`; tamaño y lado correctos | 🔗 |
+| F5-09 | Piezas y materiales | Miocardio con textura; arterias rojas y venas azules | 🔗 |
+| F5-10 | Nivel de afectación | Visible (borde del color del nivel) sin perder el aspecto realista | 👁️ |
+| F5-11 | `heart.glb` no carga | Se usa la pieza simple; la app sigue funcionando | 🔗 |
+| F5-12 | Elegir un órgano | La cámara se centra en él y se acerca; arrastrar lo cancela | 👁️ |
+| F5-13 | Revisión visual | Aprobado por el usuario | 👁️ |
 
 ---
 

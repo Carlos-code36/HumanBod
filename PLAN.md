@@ -210,6 +210,26 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 
 **Entregable:** cuerpo anatómico real.
 
+### Fase 5b — Órganos detallados con Blender
+
+> **Pedido del usuario (11 de noviembre de 2026):** los modelos 3D se veían muy básicos; ya tiene Blender instalado (5.3). Se empieza por el corazón y se revisa antes de seguir con los demás órganos.
+
+- [x] **Corazón** — `scripts/blender/build-heart.py` (Blender sin ventana) → `public/models/heart.glb` (1.5 MB):
+  - BodyParts3D trae las **cavidades** de los ventrículos (la sangre), no la pared: la superficie externa se reconstruye con la envolvente de las cavidades y de las coronarias (que corren sobre la pared), se une con las aurículas y se fusiona con remallado por vóxeles
+  - Grandes vasos recortados cerca del corazón: aorta, tronco y arterias pulmonares, venas cavas, venas pulmonares
+  - Arterias y venas coronarias; grasa epicárdica en los surcos por donde corren
+  - Textura de color y mapa de normales horneados (relieve fino del músculo) sobre una malla liviana de 14 000 triángulos
+  - Materiales propios: arterias en rojo y venas en azul (convención de los atlas); arteria pulmonar azul y venas pulmonares rojas
+- [x] Visor: el modelo detallado reemplaza la pieza simple de `body.glb` y conserva sus colores; el **nivel de afectación se muestra como un brillo en el borde** del órgano con el color del nivel. Si `heart.glb` no carga, se usa la pieza simple
+- [x] La cámara se centra y se acerca al órgano elegido (antes, al acercarse, el corazón quedaba fuera de la vista)
+- [ ] Revisión del corazón por el usuario
+- [ ] Hígado, páncreas, riñones y ojos con el mismo proceso
+- [ ] Nervios: hoy son esquemáticos; un trazado más realista requiere otra fuente de datos
+
+**Para regenerar el corazón** (mismos archivos de BodyParts3D que la Fase 5):
+`"C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" -b --factory-startup -P scripts/blender/build-heart.py -- <carpeta-obj> <partof_element_parts.txt> [--preview <carpeta>]`
+(`--preview` guarda imágenes renderizadas de frente, de lado, de atrás y de cerca). Tarda unos 45 s.
+
 ### Fase 6 — Web: publicación y pulido
 
 > **Decisión (10 de noviembre de 2026):** se descarta la versión de escritorio (Tauri). La aplicación será **solo web**.
