@@ -215,12 +215,13 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 > **Decisión (10 de noviembre de 2026):** se descarta la versión de escritorio (Tauri). La aplicación será **solo web**.
 
 - [x] Aviso legal y educativo visible (encabezado de la página, desde la Fase 0)
-- [ ] Sección "Fuentes y referencias" con todas las fuentes (enfermedad, FINDRISC, KDIGO, ADA, Bergman, BodyParts3D)
+- [x] **Rediseño de la interfaz** (pedido del usuario: al hacer scroll se perdía el 3D): el 3D ocupa la pantalla y nunca se pierde; la página no hace scroll; la información va en un panel lateral con pestañas (Órgano, Paciente, Resultados) con su propio scroll; la lista de órganos flota sobre el 3D; Simulación y Fuentes se abren en ventanas modales. En celular: 3D arriba, pestañas abajo, lista de órganos como fila de chips y ventanas a pantalla completa
+- [x] Sección "Fuentes y referencias" con todas las fuentes (enfermedad, FINDRISC, KDIGO, ADA, Bergman, BodyParts3D), en la ventana "Fuentes y créditos"
 - [ ] Metadatos web: título, descripción, idioma, ícono propio y vista previa al compartir el enlace
 - [ ] Uso en celular: tocar órganos, girar con un dedo, pellizcar para hacer zoom, formulario cómodo
 - [ ] Compatibilidad: Chrome, Edge, Firefox y Safari
 - [ ] Rendimiento y accesibilidad medidos con Lighthouse
-- [ ] Privacidad: confirmar y explicar que los datos del formulario no salen del navegador
+- [ ] Privacidad: confirmar y explicar que los datos del formulario no salen del navegador (texto ya incluido en "Fuentes y créditos"; falta la prueba F6-07)
 - [ ] Publicar en un hosting estático (**requiere elegir el servicio y tu cuenta**)
 - [ ] Revisión de contenido por alguien con formación médica (ideal)
 

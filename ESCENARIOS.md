@@ -13,7 +13,7 @@ Complemento de [PLAN.md](PLAN.md). En cada fase se listan los **escenarios** que
 
 ## Estado de los escenarios
 
-Actualizado al cerrar la Fase 5. Las pruebas automáticas citan el ID del escenario en su nombre (buscar "F3-13" en `tests/`).
+Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas automáticas citan el ID del escenario en su nombre (buscar "F3-13" en `tests/`).
 
 **Leyenda:** ✅ cubierto con prueba automática · 🖱️ verificado en Chrome real con interacción automatizada (puppeteer: clics, teclado, rueda, arrastre) · 📸 verificado con capturas de pantalla · ⏳ pendiente de revisión manual del usuario · ⬜ fase no iniciada
 
@@ -46,7 +46,12 @@ Actualizado al cerrar la Fase 5. Las pruebas automáticas citan el ID del escena
 | 5 | F5-05 El modelo no carga | 🖱️ | Archivo ocultado a propósito: aparece el cuerpo esquemático con los colores del paciente, sin bloquear la app |
 | 5 | F5-06 Rendimiento en una PC modesta | ⏳ | Solo probado con gráficos por software; **falta probarlo en tu PC** |
 | 5 | F5-07 Créditos de licencia visibles | 📸 | Pie de página y `public/models/CREDITOS.md` |
-| 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | — |
+| 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | Pendientes |
+| 6 | F6-09 El 3D no se pierde al leer información | ✅ 🖱️ | Escritorio (1440×900) y celular (390×844): la página no hace scroll y el 3D queda fijo al desplazar el panel |
+| 6 | F6-10 Pestañas | ✅ | Clic y flechas del teclado; un solo panel visible (`layout.test.tsx`) |
+| 6 | F6-11 Elegir un órgano abre su pestaña | ✅ 🖱️ | Desde la lista, desde Resultados y tocando el 3D en celular |
+| 6 | F6-12 El formulario no pierde datos al cambiar de pestaña | ✅ | `layout.test.tsx` |
+| 6 | F6-13 Ventanas modales | ✅ 🖱️ | Abren y cierran con ✕, clic fuera y Esc; con una ventana abierta, Esc no quita la selección del órgano |
 
 **Comprobación de que las pruebas detectan errores:** se introdujeron errores a propósito y las pruebas los detectaron. En FINDRISC, `<=` cambiado por `<` en el límite de IMC 30 (falló F3-13). En KDIGO, `>=` por `>` en TFG 60 (falló F3-20). En la simulación, Runge-Kutta 4 reemplazado por Euler (fallaron los 3 casos de F4-05).
 
@@ -71,6 +76,10 @@ Actualizado al cerrar la Fase 5. Las pruebas automáticas citan el ID del escena
 | 5 | Las pruebas usan módulos de Node y la app no tiene esos tipos | `tsconfig.test.json` separado: la app sigue sin acceso a Node |
 | 5 | **Etiqueta del órgano vacía** si se seleccionaba antes de cargar el modelo (error "removeChild") | Se dejó de usar `<Html>` de drei: la etiqueta es HTML normal y se proyecta desde 3D cada cuadro |
 | 5 | El zoom apuntaba a la pelvis | Centro de giro movido al tronco (1.05 m) |
+| 6 | Al hacer scroll para leer, el 3D se perdía de vista | Rediseño: 3D fijo, panel lateral con pestañas y ventanas modales |
+| 6 | En celular la página quedaba 25 px más ancha que la pantalla | La columna de la página crecía para que cupiera el título sin saltos: `grid-template-columns: minmax(0, 1fr)` |
+| 6 | En celular el encabezado ocupaba un tercio de la pantalla | Encabezado en una franja con textos cortos; el 3D pasó de empezar a 127 px a 58 px |
+| 6 | Esc cerraba la ventana y además quitaba la selección del órgano | Esc solo quita la selección si no hay una ventana abierta |
 
 ---
 
@@ -306,6 +315,11 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | F6-06 | Lighthouse | Rendimiento ≥ 80 y accesibilidad ≥ 90 | 👁️ |
 | F6-07 | Privacidad | Escribir en el formulario no genera ninguna solicitud de red | 🔗 |
 | F6-08 | Compartir el enlace | Se ve título, descripción e imagen de vista previa | 👁️ |
+| F6-09 | Leer información (formulario, detalle, resultados) | El 3D sigue visible; la página no hace scroll, solo el panel | 🔗 / 👁️ |
+| F6-10 | Pestañas del panel | Cambian con clic y con flechas del teclado | 🔗 |
+| F6-11 | Elegir un órgano (3D, lista o resultados) | Se abre la pestaña "Órgano" con su detalle | 🔗 |
+| F6-12 | Cambiar de pestaña con el formulario lleno | No se pierde nada de lo escrito | 🔗 |
+| F6-13 | Ventanas modales (Simulación, Fuentes) | Se cierran con ✕, clic fuera y Esc; Esc no afecta la selección | 🔗 |
 
 ### Problemas posibles
 | Problema | Prevención |

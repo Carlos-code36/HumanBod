@@ -1,48 +1,83 @@
+/* ===== Estructura: el 3D siempre visible; la página no hace scroll ===== */
 .app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 2rem;
-}
-
-.header h1 {
-  margin: 0 0 0.75rem;
-  font-size: 1.6rem;
-}
-
-.warning {
-  margin: 0 0 1.25rem;
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  font-size: 0.95rem;
-}
-
-.layout {
+  height: 100vh;
+  height: 100dvh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 1.25rem;
-  align-items: start;
+  /* minmax(0, 1fr): sin esto, un texto largo sin saltos (el título) ensancha la página más que la pantalla */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
 }
 
-@media (max-width: 860px) {
-  .layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.aviso {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.aviso strong {
+  color: var(--text-h);
+}
+
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.boton {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.boton-secundario {
+  background: transparent;
+  color: var(--accent);
+}
+
+.boton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.escenario {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(440px, 40vw);
 }
 
 .viewer {
+  position: relative;
   min-width: 0;
+  min-height: 0;
 }
 
 .viewer-box {
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  height: min(72vh, 680px);
-  min-height: 420px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--panel-bg);
+  background: var(--bg);
 }
 
 .viewer-fallback {
@@ -53,10 +88,294 @@
   text-align: center;
 }
 
+/* Lista de órganos flotando sobre el 3D */
+.organ-rail {
+  position: absolute;
+  top: 3rem;
+  left: 0.75rem;
+  width: 230px;
+  max-height: calc(100% - 6rem);
+  overflow-y: auto;
+}
+
+.organ-rail .panel {
+  padding: 0.6rem;
+  background: color-mix(in srgb, var(--panel-bg) 88%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.organ-rail .panel h2 {
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+
+.organ-rail .organ-button {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+}
+
 .hint {
-  margin: 0.5rem 0 0;
-  font-size: 0.85rem;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.78rem;
   color: var(--muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.credito-mini {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Panel lateral con pestañas: solo el contenido hace scroll */
+.drawer {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-left: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  flex: 1;
+  position: relative;
+  padding: 0.7rem 0.5rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--text-h);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.tab-punto {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: 0.35rem;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+
+.tab-panel {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+}
+
+/* Dentro del panel lateral, las secciones no llevan su propio marco */
+.tab-panel > .panel {
+  border: 0;
+  padding: 0;
+  background: none;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Ventanas modales */
+.modal {
+  width: min(1100px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  color: var(--text);
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.modal-caja {
+  position: relative;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.modal-caja > .panel {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.fuentes-creditos {
+  max-width: 760px;
+}
+
+.fuentes-creditos h2 {
+  margin: 0 2.5rem 0.75rem 0;
+}
+
+.fuentes-creditos h3 {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 1rem;
+  color: var(--text-h);
+}
+
+.fuentes-creditos .fuentes {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.fuentes-creditos a {
+  color: var(--accent);
+}
+
+/* Textos largos y cortos según el ancho (los cortos solo en celular) */
+.texto-corto {
+  display: none;
+}
+
+/* Celular y ventanas angostas: 3D arriba (fijo), pestañas abajo */
+@media (max-width: 860px) {
+  .texto-largo {
+    display: none;
+  }
+
+  .texto-corto {
+    display: inline;
+  }
+
+  /* Encabezado en una sola franja para dejar más espacio al 3D */
+  .topbar {
+    flex-wrap: nowrap;
+    padding: 0.45rem 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .topbar-titulo {
+    min-width: 0;
+  }
+
+  .topbar h1 {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .aviso {
+    font-size: 0.72rem;
+  }
+
+  .acciones {
+    flex: none;
+    gap: 0.35rem;
+  }
+
+  .boton {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.8rem;
+  }
+
+  /* Ventanas modales a pantalla completa */
+  .modal {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .modal-caja {
+    padding: 1rem 0.85rem 1.25rem;
+  }
+
+  .escenario {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 45fr) minmax(0, 55fr);
+  }
+
+  .drawer {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  /* La lista de órganos pasa a ser una fila de chips desplazable sobre el 3D */
+  .organ-rail {
+    top: auto;
+    bottom: 1.6rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    max-height: none;
+    overflow-x: auto;
+  }
+
+  .organ-rail .panel {
+    padding: 0.35rem;
+  }
+
+  .organ-rail .panel h2 {
+    display: none;
+  }
+
+  .organ-rail .organ-list {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .organ-rail .organ-button {
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .organ-rail .badge {
+    display: none;
+  }
+
+  .hint {
+    display: none;
+  }
 }
 
 .panel {
@@ -141,17 +460,7 @@
   font-size: 0.8rem;
 }
 
-.side {
-  display: grid;
-  gap: 1rem;
-  align-content: start;
-}
 
-/* F2-07: el contenido largo se desplaza dentro del panel */
-.detail-panel {
-  max-height: 70vh;
-  overflow-y: auto;
-}
 
 .detail-panel h2 {
   margin: 0 0 0.25rem;
@@ -227,25 +536,8 @@
   border: 1px dashed var(--warning-border);
 }
 
-.main {
-  min-width: 0;
-  display: grid;
-  gap: 1.25rem;
-  align-content: start;
-}
 
-.form-results {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: start;
-}
 
-@media (max-width: 1100px) {
-  .form-results {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
 
 /* Formulario */
 .form-header {
@@ -601,17 +893,7 @@ details summary {
   pointer-events: none;
 }
 
-.creditos {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.8rem;
-  color: var(--muted);
-}
 
-.creditos a {
-  color: inherit;
-}
 
 /* Etiqueta del órgano seleccionado, proyectada desde 3D (ver SeguirEtiqueta) */
 .organ-label-3d {
@@ -625,4 +907,9 @@ details summary {
 
 .organ-label-3d[hidden] {
   display: none;
+}
+
+/* El título de la simulación no debe quedar debajo del botón de cerrar */
+.modal-caja .simulacion .form-header {
+  padding-right: 2.75rem;
 }
