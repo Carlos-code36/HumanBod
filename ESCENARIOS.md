@@ -46,7 +46,7 @@ Actualizado al cerrar la Fase 5. Las pruebas automáticas citan el ID del escena
 | 5 | F5-05 El modelo no carga | 🖱️ | Archivo ocultado a propósito: aparece el cuerpo esquemático con los colores del paciente, sin bloquear la app |
 | 5 | F5-06 Rendimiento en una PC modesta | ⏳ | Solo probado con gráficos por software; **falta probarlo en tu PC** |
 | 5 | F5-07 Créditos de licencia visibles | 📸 | Pie de página y `public/models/CREDITOS.md` |
-| 6 | F6-01 a F6-06 Escritorio | ⬜ | — |
+| 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | — |
 
 **Comprobación de que las pruebas detectan errores:** se introdujeron errores a propósito y las pruebas los detectaron. En FINDRISC, `<=` cambiado por `<` en el límite de IMC 30 (falló F3-13). En KDIGO, `>=` por `>` en TFG 60 (falló F3-20). En la simulación, Runge-Kutta 4 reemplazado por Euler (fallaron los 3 casos de F4-05).
 
@@ -291,25 +291,31 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 
 ---
 
-## Fase 6 — Escritorio (Tauri) y pulido
+## Fase 6 — Web: publicación y pulido
+
+> Se descartó la versión de escritorio (Tauri) el 10 de noviembre de 2026: la aplicación es solo web.
 
 ### Escenarios
 | ID | Escenario | Esperado | Tipo |
 |---|---|---|---|
-| F6-01 | `npm run tauri build` | Genera el instalador `.msi` o `.exe` | 🔗 |
-| F6-02 | Instalar en otra PC Windows limpia | Abre y funciona | 👁️ |
-| F6-03 | Sin internet | Funciona completa (todo es local) | 👁️ |
-| F6-04 | El modelo 3D carga dentro de la app de escritorio | Rutas correctas | 👁️ |
-| F6-05 | Desinstalar | No deja restos importantes | 👁️ |
-| F6-06 | Todas las pruebas automáticas | Verdes antes de generar el instalador | 🔗 |
+| F6-01 | `npm run check` y `npm run build` antes de publicar | Todo en verde; `dist/` sin errores | 🔗 |
+| F6-02 | Abrir el sitio publicado (HTTPS) | Cargan la página, el modelo 3D y las gráficas | 👁️ |
+| F6-03 | Chrome, Edge, Firefox y Safari | Funciona igual en todos | 👁️ |
+| F6-04 | Celular | Tocar un órgano lo selecciona; un dedo gira; pellizcar hace zoom; el formulario se usa sin hacer zoom en la página | 👁️ |
+| F6-05 | Enlaces con parámetros (`?ejemplo=`, `?organo=`, `?perfil=`) | Funcionan en el sitio publicado, también si está en una subcarpeta | 🔗 / 👁️ |
+| F6-06 | Lighthouse | Rendimiento ≥ 80 y accesibilidad ≥ 90 | 👁️ |
+| F6-07 | Privacidad | Escribir en el formulario no genera ninguna solicitud de red | 🔗 |
+| F6-08 | Compartir el enlace | Se ve título, descripción e imagen de vista previa | 👁️ |
 
 ### Problemas posibles
 | Problema | Prevención |
 |---|---|
-| Falta Rust o las herramientas de compilación de C++ | Seguir los requisitos de Tauri para Windows antes de la fase |
-| Falta WebView2 en la PC de destino | Configurar el instalador para incluirlo o descargarlo |
-| Rutas de archivos distintas entre web y escritorio | Cargar recursos con rutas relativas; probar F6-04 |
-| Windows SmartScreen advierte "app desconocida" | Normal sin firma digital; documentarlo |
+| El sitio se publica en una subcarpeta (por ejemplo, GitHub Pages: `/nombre-repo/`) y no encuentra el modelo | Rutas con `import.meta.env.BASE_URL` (ya se usa para el modelo); configurar `base` en Vite; probar F6-05 |
+| Después de actualizar, el navegador muestra la versión anterior | Vite pone un código único en el nombre de cada archivo JS/CSS; el modelo `.glb` necesita un nombre con versión o encabezados de caché |
+| Carga lenta en celulares con datos móviles | El 3D y las gráficas ya cargan aparte; comprimir con gzip/brotli (lo hacen los hostings); medir con Lighthouse |
+| El celular no tiene WebGL o lo tiene desactivado | Ya existe el aviso y la lista de órganos sin 3D |
+| Alguien ingresa datos reales de salud | Todo se calcula en el navegador y no se envía; aviso de no ingresar datos personales (ya existe); prueba F6-07 |
+| Se interpreta como herramienta de diagnóstico | Aviso visible en el encabezado y en los resultados (ya existe) |
 
 ---
 

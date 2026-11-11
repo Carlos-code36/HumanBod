@@ -6,7 +6,7 @@
 
 ## 1. Objetivo
 
-Construir una aplicación (web primero, escritorio después) que:
+Construir una **aplicación web** que:
 
 1. Muestre un **esquema 3D del cuerpo humano** con órganos seleccionables.
 2. Permita estudiar **una enfermedad** (diabetes tipo 2): qué órganos afecta, cómo progresa y por qué.
@@ -33,7 +33,7 @@ Construir una aplicación (web primero, escritorio después) que:
 | Estado | Zustand | Estado global simple (paciente, órgano seleccionado) |
 | Validación | Zod | Valida los JSON médicos y el formulario (rangos, unidades, campos obligatorios) |
 | Pruebas | Vitest + factories de datos | Verificar que los cálculos clínicos den lo esperado (ver [ESCENARIOS.md](ESCENARIOS.md)) |
-| Escritorio (fase final) | Tauri | Empaqueta la app web como app ligera de Windows o Mac |
+| Publicación | Hosting estático (por definir: GitHub Pages, Netlify, Vercel o Cloudflare Pages) | La app es solo archivos estáticos: no necesita servidor propio |
 
 ---
 
@@ -210,13 +210,21 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
 
 **Entregable:** cuerpo anatómico real.
 
-### Fase 6 — Escritorio y pulido
-- [ ] Empaquetar con Tauri (requiere instalar Rust)
-- [ ] Aviso legal y educativo visible
-- [ ] Página "Fuentes y referencias"
+### Fase 6 — Web: publicación y pulido
+
+> **Decisión (10 de noviembre de 2026):** se descarta la versión de escritorio (Tauri). La aplicación será **solo web**.
+
+- [x] Aviso legal y educativo visible (encabezado de la página, desde la Fase 0)
+- [ ] Sección "Fuentes y referencias" con todas las fuentes (enfermedad, FINDRISC, KDIGO, ADA, Bergman, BodyParts3D)
+- [ ] Metadatos web: título, descripción, idioma, ícono propio y vista previa al compartir el enlace
+- [ ] Uso en celular: tocar órganos, girar con un dedo, pellizcar para hacer zoom, formulario cómodo
+- [ ] Compatibilidad: Chrome, Edge, Firefox y Safari
+- [ ] Rendimiento y accesibilidad medidos con Lighthouse
+- [ ] Privacidad: confirmar y explicar que los datos del formulario no salen del navegador
+- [ ] Publicar en un hosting estático (**requiere elegir el servicio y tu cuenta**)
 - [ ] Revisión de contenido por alguien con formación médica (ideal)
 
-**Entregable:** app de escritorio instalable.
+**Entregable:** sitio web público, usable en computadora y celular.
 
 ---
 
@@ -246,4 +254,4 @@ El modelo de datos está pensado para reutilizarse:
 - Lindström J, Tuomilehto J. *The Diabetes Risk Score* (FINDRISC). Diabetes Care, 2003
 - Bergman RN et al. *Quantitative estimation of insulin sensitivity*. Am J Physiol, 1979
 - BodyParts3D — https://dbarchive.biosciencedbc.jp/en/bodyparts3d/ (licencia: /en/bodyparts3d/lic.html)
-- Documentación: React Three Fiber, Three.js, Vite, Tauri
+- Documentación: React Three Fiber, Three.js, Vite

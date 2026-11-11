@@ -8,7 +8,7 @@ import { useAppStore } from '../../store/useAppStore'
 import type { Organ } from '../../types/medical'
 import { ORGAN_PARTS, SILHOUETTE, type Part } from './bodyLayout'
 
-/** Modelo anatómico generado con scripts/build-anatomy.mjs (BodyParts3D). Ruta relativa: funciona también en Tauri. */
+/** Modelo anatómico generado con scripts/build-anatomy.mjs (BodyParts3D). Usa BASE_URL: funciona si el sitio se publica en una subcarpeta. */
 export const MODELO_URL = `${import.meta.env.BASE_URL}models/body.glb`
 
 /** Centro del tronco (donde están los órganos): la cámara gira y se acerca hacia este punto. */
