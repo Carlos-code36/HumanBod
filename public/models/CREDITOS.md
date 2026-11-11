@@ -1,4 +1,4 @@
-# Créditos de los modelos 3D (`body.glb`, `heart.glb`)
+# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`)
 
 **BodyParts3D, © The Database Center for Life Science.**
 https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
@@ -34,3 +34,14 @@ Generado con Blender mediante `scripts/blender/build-heart.py`, a partir de los 
   cavidades y de las coronarias, remallado por vóxeles y suavizado. Es una aproximación, no una medición.
 - Vasos recortados cerca del corazón; coronarias engrosadas 0,35 mm para que se vean.
 - Grasa epicárdica, color y relieve del músculo: **texturas procedurales propias**, horneadas en Blender.
+
+### `liver.glb` (hígado detallado)
+
+Generado con Blender mediante `scripts/blender/build-liver.py`, a partir de los mismos archivos:
+
+- Parénquima: segmentos hepatovenosos II a VIII y lóbulo caudado (elementos de FMA7197), fusionados con
+  remallado por vóxeles y suavizados.
+- Vesícula biliar (FMA7202); conductos hepático común, cístico, hepático derecho e izquierdo (FMA14668,
+  FMA14539, FMA14669, FMA14670); vena porta extrahepática y troncos de sus ramas (FMA45628); arteria hepática
+  común, propia y troncos de sus ramas (FMA14771); vena cava inferior recortada a la altura del hígado (FMA10951).
+- Color, lobulillos y relieve: **texturas procedurales propias**, horneadas en Blender.

@@ -51,7 +51,11 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | F5-10 Nivel de afectación visible en el corazón detallado | 🖱️ | Paciente de ejemplo: borde amarillo con "Leve", sin tapar el tejido; gris tenue con "Sin datos" |
 | 5b | F5-11 `heart.glb` no carga | 🖱️ | Petición bloqueada a propósito: se ve el corazón simple de `body.glb`, la app sigue funcionando |
 | 5b | F5-12 La cámara enfoca el órgano elegido | 🖱️ | Al elegir "Corazón" la cámara se centra y se acerca; arrastrar cancela el movimiento |
-| 5b | F5-13 Revisión visual del corazón | ⏳ | **Falta tu revisión** |
+| 5b | F5-13 Revisión visual del corazón | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
+| 5b | F5-14 Hígado detallado en su sitio, piezas y materiales | ✅ 🖱️ | `organosDetallados.test.ts` (las mismas 9 pruebas que el corazón, ahora para cada órgano): centro igual al hígado de `body.glb`, a la derecha del paciente, vena cava y porta azules, arteria roja; visto en Chrome con y sin piel |
+| 5b | F5-15 `liver.glb` no carga | 🖱️ | Petición bloqueada a propósito: se ve el hígado simple de `body.glb` |
+| 5b | F5-16 La etiqueta queda sobre su órgano | 🖱️ | "Hígado" sobre el hígado (antes caía sobre el corazón); con "Nervios periféricos" la cámara muestra el cuerpo entero |
+| 5b | F5-17 Revisión visual del hígado | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
 | 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | Pendientes |
 | 6 | F6-09 El 3D no se pierde al leer información | ✅ 🖱️ | Escritorio (1440×900) y celular (390×844): la página no hace scroll y el 3D queda fijo al desplazar el panel |
 | 6 | F6-10 Pestañas | ✅ | Clic y flechas del teclado; un solo panel visible (`layout.test.tsx`) |
@@ -87,6 +91,10 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | El color del nivel tapaba el tejido realista | El nivel se muestra como brillo de borde (Fresnel), más fuerte al seleccionar |
 | 5b | Al acercarse, el corazón quedaba fuera de la vista (la cámara apunta al abdomen) | La cámara se centra en el órgano elegido |
 | 5b | Avisos "Mesh is not valid" al exportar | `mesh.validate()` antes de exportar |
+| 5b | Hígado: la etiqueta "Hígado" aparecía sobre el corazón | La etiqueta va sobre el centro del órgano, en su cara delantera |
+| 5b | Hígado: mancha clara en el borde inferior en los renders de control | Se revisó la textura horneada (estaba limpia): era un reflejo de la luz trasera; rugosidad subida de 0,32 a 0,4 |
+| 5b | Las texturas guardadas para revisar el horneado salían negras (`image.copy()` no copia los píxeles horneados) | Se guardan con `save_render` |
+| 5b | Una captura automática mostró la cámara en un ángulo raro tras quitar la piel | No se pudo reproducir (se repitió la misma secuencia con capturas cada 0,3 s); queda anotado por si lo ves a mano |
 | 6 | Al hacer scroll para leer, el 3D se perdía de vista | Rediseño: 3D fijo, panel lateral con pestañas y ventanas modales |
 | 6 | En celular la página quedaba 25 px más ancha que la pantalla | La columna de la página crecía para que cupiera el título sin saltos: `grid-template-columns: minmax(0, 1fr)` |
 | 6 | En celular el encabezado ocupaba un tercio de la pantalla | Encabezado en una franja con textos cortos; el 3D pasó de empezar a 127 px a 58 px |
@@ -317,7 +325,11 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | F5-10 | Nivel de afectación | Visible (borde del color del nivel) sin perder el aspecto realista | 👁️ |
 | F5-11 | `heart.glb` no carga | Se usa la pieza simple; la app sigue funcionando | 🔗 |
 | F5-12 | Elegir un órgano | La cámara se centra en él y se acerca; arrastrar lo cancela | 👁️ |
-| F5-13 | Revisión visual | Aprobado por el usuario | 👁️ |
+| F5-13 | Revisión visual del corazón | Aprobado por el usuario | 👁️ |
+| F5-14 | Hígado detallado | Mismas comprobaciones que F5-08 y F5-09 | 🔗 |
+| F5-15 | `liver.glb` no carga | Se usa la pieza simple | 🔗 |
+| F5-16 | Etiqueta del órgano | Sobre su órgano, sin caer sobre otro | 👁️ |
+| F5-17 | Revisión visual del hígado | Aprobado por el usuario | 👁️ |
 
 ---
 

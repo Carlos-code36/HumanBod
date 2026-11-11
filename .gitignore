@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Caché de Python (scripts de Blender)
+__pycache__/

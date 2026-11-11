@@ -16,11 +16,12 @@ export const MODELO_URL = `${import.meta.env.BASE_URL}models/body.glb`
 const TARGET: [number, number, number] = [0, 1.05, 0]
 
 /**
- * Órganos con un modelo detallado propio, hecho con Blender (scripts/blender/build-heart.py).
+ * Órganos con un modelo detallado propio, hecho con Blender (scripts/blender/build-<órgano>.py).
  * Reemplazan a la pieza simple de body.glb; si el archivo no carga, se usa la pieza simple.
  */
 const MODELOS_DETALLADOS: Readonly<Record<string, string>> = {
   heart: `${import.meta.env.BASE_URL}models/heart.glb`,
+  liver: `${import.meta.env.BASE_URL}models/liver.glb`,
 }
 
 // ---------- Etiqueta del órgano seleccionado ----------
@@ -30,8 +31,15 @@ const MODELOS_DETALLADOS: Readonly<Record<string, string>> = {
 
 type Punto = [number, number, number]
 
-/** Punto de etiqueta de cada órgano, registrado por cada pieza al montarse. */
-const PuntosEtiqueta = createContext<Map<string, Punto>>(new Map())
+/** Dónde va la etiqueta de cada órgano y su centro (al que apunta la cámara); los registra cada pieza al montarse. */
+interface PuntosOrgano {
+  etiqueta: Punto
+  centro: Punto
+  /** Medida más larga del órgano (m), para elegir a qué distancia acercar la cámara. */
+  tamano: number
+}
+
+const PuntosEtiqueta = createContext<Map<string, PuntosOrgano>>(new Map())
 
 function SeguirEtiqueta({ etiquetaRef }: { etiquetaRef: RefObject<HTMLDivElement | null> }) {
   const puntos = useContext(PuntosEtiqueta)
@@ -40,7 +48,7 @@ function SeguirEtiqueta({ etiquetaRef }: { etiquetaRef: RefObject<HTMLDivElement
     const el = etiquetaRef.current
     if (!el) return
     const id = useAppStore.getState().selectedOrganId
-    const p = id ? puntos.get(id) : undefined
+    const p = id ? puntos.get(id)?.etiqueta : undefined
     if (!id || !p) {
       el.hidden = true
       return
@@ -64,8 +72,8 @@ function SeguirEtiqueta({ etiquetaRef }: { etiquetaRef: RefObject<HTMLDivElement
 // para ver el detalle. Al quitar la selección vuelve a apuntar al tronco. Si la persona arrastra
 // o hace zoom durante el movimiento, se cancela.
 
-/** Distancia de la cámara al órgano enfocado (m). */
-const DISTANCIA_ENFOQUE = 0.7
+/** Distancia de la cámara al órgano enfocado (m): 0,7 m, o más si el órgano es grande (nervios). */
+const distanciaEnfoque = (tamano: number) => Math.max(0.7, tamano * 2.2)
 
 function EnfocarOrgano() {
   const puntos = useContext(PuntosEtiqueta)
@@ -77,9 +85,8 @@ function EnfocarOrgano() {
       useAppStore.subscribe((s, antes) => {
         if (s.selectedOrganId === antes.selectedOrganId) return
         const p = s.selectedOrganId ? puntos.get(s.selectedOrganId) : undefined
-        // El punto de la etiqueta está sobre el órgano: se baja un poco para apuntar a su centro.
         destino.current = p
-          ? { objetivo: new Vector3(p[0], p[1] - 0.08, p[2]), distancia: DISTANCIA_ENFOQUE }
+          ? { objetivo: new Vector3(...p.centro), distancia: distanciaEnfoque(p.tamano) }
           : { objetivo: new Vector3(...TARGET), distancia: null }
       }),
     [puntos],
@@ -123,12 +130,12 @@ interface EstadoVisual {
 
 interface OrganInteractivoProps {
   organ: Organ
-  /** Dónde poner la etiqueta con el nombre cuando está seleccionado. */
-  etiqueta: [number, number, number] | undefined
+  /** Dónde poner la etiqueta con el nombre cuando está seleccionado, y el centro del órgano. */
+  puntos: PuntosOrgano | undefined
   children: (material: ReactNode, estado: EstadoVisual) => ReactNode
 }
 
-function OrganInteractivo({ organ, etiqueta, children }: OrganInteractivoProps) {
+function OrganInteractivo({ organ, puntos: propios, children }: OrganInteractivoProps) {
   const selected = useAppStore((s) => s.selectedOrganId === organ.id)
   const nivel = useAppStore((s) => s.niveles[organ.id])
   const selectOrgan = useAppStore((s) => s.selectOrgan)
@@ -136,13 +143,13 @@ function OrganInteractivo({ organ, etiqueta, children }: OrganInteractivoProps) 
   const puntos = useContext(PuntosEtiqueta)
 
   useEffect(() => {
-    if (!etiqueta) return
-    puntos.set(organ.id, etiqueta)
+    if (!propios) return
+    puntos.set(organ.id, propios)
     return () => {
       // Solo se borra si sigue siendo el punto de esta pieza (el modelo real reemplaza al esquemático).
-      if (puntos.get(organ.id) === etiqueta) puntos.delete(organ.id)
+      if (puntos.get(organ.id) === propios) puntos.delete(organ.id)
     }
-  }, [puntos, organ.id, etiqueta])
+  }, [puntos, organ.id, propios])
 
   const color = colorDeNivel(nivel)
   const glow = selected ? 0.55 : hovered ? 0.25 : 0
@@ -267,7 +274,11 @@ function CuerpoSimple() {
         const parts = ORGAN_PARTS[organ.mesh] ?? []
         const p0 = parts[0]?.position
         return (
-          <OrganInteractivo key={organ.id} organ={organ} etiqueta={p0 && [p0[0], p0[1] + 0.09, p0[2]]}>
+          <OrganInteractivo
+            key={organ.id}
+            organ={organ}
+            puntos={p0 && { etiqueta: [p0[0], p0[1] + 0.09, p0[2]], centro: [p0[0], p0[1], p0[2]], tamano: 0.15 }}
+          >
             {(material) =>
               parts.map((part, i) => (
                 <mesh key={i} position={part.position} rotation={part.rotation} scale={part.scale}>
@@ -290,11 +301,16 @@ function geometriaDe(scene: { getObjectByName: (n: string) => unknown }, nombre:
   return obj instanceof Mesh ? (obj.geometry as BufferGeometry) : undefined
 }
 
-/** Punto sobre la parte más alta de la pieza, para la etiqueta. */
-function puntoEtiqueta(g: BufferGeometry): [number, number, number] {
+/**
+ * Etiqueta sobre el centro del órgano, en su cara delantera (antes iba encima del órgano y la del
+ * hígado caía sobre el corazón). La cámara apunta al centro.
+ */
+function puntosDe(g: BufferGeometry): PuntosOrgano {
   g.computeBoundingBox()
   const b = g.boundingBox!
-  return [(b.min.x + b.max.x) / 2, b.max.y + 0.05, (b.min.z + b.max.z) / 2]
+  const c: Punto = [(b.min.x + b.max.x) / 2, (b.min.y + b.max.y) / 2, (b.min.z + b.max.z) / 2]
+  const tamano = Math.max(b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z)
+  return { etiqueta: [c[0], c[1], b.max.z], centro: c, tamano }
 }
 
 function CuerpoAnatomico({ mostrarPiel }: { mostrarPiel: boolean }) {
@@ -305,7 +321,7 @@ function CuerpoAnatomico({ mostrarPiel }: { mostrarPiel: boolean }) {
         const g = geometriaDe(scene, organ.mesh)
         // Si falta una pieza en el modelo, se lanza un error y se usa el cuerpo esquemático (F5-05).
         if (!g) throw new Error(`El modelo no tiene la pieza "${organ.mesh}" (${organ.id})`)
-        return { organ, g, etiqueta: puntoEtiqueta(g) }
+        return { organ, g, puntos: puntosDe(g) }
       }),
     [scene],
   )
@@ -319,8 +335,8 @@ function CuerpoAnatomico({ mostrarPiel }: { mostrarPiel: boolean }) {
           <meshStandardMaterial color="#b8c8e6" transparent opacity={0.09} depthWrite={false} side={FrontSide} roughness={0.7} />
         </mesh>
       )}
-      {piezas.map(({ organ, g, etiqueta }) => (
-        <OrganInteractivo key={organ.id} organ={organ} etiqueta={etiqueta}>
+      {piezas.map(({ organ, g, puntos }) => (
+        <OrganInteractivo key={organ.id} organ={organ} puntos={puntos}>
           {(material, estado) => {
             const simple = <mesh geometry={g}>{material}</mesh>
             const url = MODELOS_DETALLADOS[organ.mesh]
@@ -371,7 +387,7 @@ function Cargando() {
 export default function BodyViewer() {
   const selectOrgan = useAppStore((s) => s.selectOrgan)
   const [mostrarPiel, setMostrarPiel] = useState(true)
-  const puntos = useMemo(() => new Map<string, Punto>(), [])
+  const puntos = useMemo(() => new Map<string, PuntosOrgano>(), [])
   const etiquetaRef = useRef<HTMLDivElement>(null)
   return (
     <>
