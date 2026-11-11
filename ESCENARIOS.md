@@ -56,6 +56,8 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | F5-15 `liver.glb` no carga | 🖱️ | Petición bloqueada a propósito: se ve el hígado simple de `body.glb` |
 | 5b | F5-16 La etiqueta queda sobre su órgano | 🖱️ | "Hígado" sobre el hígado (antes caía sobre el corazón); con "Nervios periféricos" la cámara muestra el cuerpo entero |
 | 5b | F5-17 Revisión visual del hígado | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
+| 5b | F5-18 Páncreas detallado en su sitio, piezas y materiales | ✅ 🖱️ | `organosDetallados.test.ts`: centro igual al páncreas de `body.glb` (±1 cm), arterias rojas, vena porta azul violácea; visto en Chrome con y sin piel |
+| 5b | F5-19 Revisión visual del páncreas | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
 | 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | Pendientes |
 | 6 | F6-09 El 3D no se pierde al leer información | ✅ 🖱️ | Escritorio (1440×900) y celular (390×844): la página no hace scroll y el 3D queda fijo al desplazar el panel |
 | 6 | F6-10 Pestañas | ✅ | Clic y flechas del teclado; un solo panel visible (`layout.test.tsx`) |
@@ -94,6 +96,8 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | Hígado: la etiqueta "Hígado" aparecía sobre el corazón | La etiqueta va sobre el centro del órgano, en su cara delantera |
 | 5b | Hígado: mancha clara en el borde inferior en los renders de control | Se revisó la textura horneada (estaba limpia): era un reflejo de la luz trasera; rugosidad subida de 0,32 a 0,4 |
 | 5b | Las texturas guardadas para revisar el horneado salían negras (`image.copy()` no copia los píxeles horneados) | Se guardan con `save_render` |
+| 5b | Páncreas: la arteria esplénica terminaba en ramas flotando (el modelo no tiene bazo) | Se corta al final de la cola del páncreas |
+| 5b | Páncreas: los lóbulos parecían baldosas agrietadas; al deformarlos mucho quedaban borrosos | Deformación con ruido de ~1 mm y surcos más suaves |
 | 5b | Una captura automática mostró la cámara en un ángulo raro tras quitar la piel | No se pudo reproducir (se repitió la misma secuencia con capturas cada 0,3 s); queda anotado por si lo ves a mano |
 | 6 | Al hacer scroll para leer, el 3D se perdía de vista | Rediseño: 3D fijo, panel lateral con pestañas y ventanas modales |
 | 6 | En celular la página quedaba 25 px más ancha que la pantalla | La columna de la página crecía para que cupiera el título sin saltos: `grid-template-columns: minmax(0, 1fr)` |
@@ -330,6 +334,8 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | F5-15 | `liver.glb` no carga | Se usa la pieza simple | 🔗 |
 | F5-16 | Etiqueta del órgano | Sobre su órgano, sin caer sobre otro | 👁️ |
 | F5-17 | Revisión visual del hígado | Aprobado por el usuario | 👁️ |
+| F5-18 | Páncreas detallado | Mismas comprobaciones que F5-08 y F5-09 | 🔗 |
+| F5-19 | Revisión visual del páncreas | Aprobado por el usuario | 👁️ |
 
 ---
 

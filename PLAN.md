@@ -230,10 +230,14 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
   - Textura con lobulillos apenas visibles y manchas suaves; cápsula algo brillante
 - [x] Etiqueta del órgano sobre su centro (antes iba encima y la del hígado caía sobre el corazón); la cámara apunta al centro y se aleja más para órganos grandes (los nervios se ven completos)
 - [x] Revisión del hígado por el usuario (aprobado el 11 de noviembre de 2026)
-- [ ] Páncreas, riñones y ojos con el mismo proceso
+- [x] **Páncreas** — `scripts/blender/build-pancreas.py` → `public/models/pancreas.glb` (1.0 MB):
+  - Parénquima (cabeza, cuerpo y cola) con textura lobulada (lóbulos de ~4 mm con surcos suaves)
+  - Contexto como en los atlas: duodeno (la "C" alrededor de la cabeza), arteria esplénica (cortada al final de la cola, porque el modelo no tiene bazo), tronco celíaco, arteria mesentérica superior, aorta abdominal y vena porta
+- [x] Revisión del páncreas por el usuario (aprobado el 11 de noviembre de 2026)
+- [ ] Riñones y ojos con el mismo proceso
 - [ ] Nervios: hoy son esquemáticos; un trazado más realista requiere otra fuente de datos
 
-**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py`):
+**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py` o `build-pancreas.py`):
 `"C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" -b --factory-startup -P scripts/blender/build-heart.py -- <carpeta-obj> <partof_element_parts.txt> [--preview <carpeta>]`
 (`--preview` guarda imágenes renderizadas de frente, de lado, de atrás y de cerca). Tarda unos 45 s.
 

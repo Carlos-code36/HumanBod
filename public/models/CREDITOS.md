@@ -1,4 +1,4 @@
-# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`)
+# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`, `pancreas.glb`)
 
 **BodyParts3D, © The Database Center for Life Science.**
 https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
@@ -45,3 +45,13 @@ Generado con Blender mediante `scripts/blender/build-liver.py`, a partir de los 
   FMA14539, FMA14669, FMA14670); vena porta extrahepática y troncos de sus ramas (FMA45628); arteria hepática
   común, propia y troncos de sus ramas (FMA14771); vena cava inferior recortada a la altura del hígado (FMA10951).
 - Color, lobulillos y relieve: **texturas procedurales propias**, horneadas en Blender.
+
+### `pancreas.glb` (páncreas detallado)
+
+Generado con Blender mediante `scripts/blender/build-pancreas.py`, a partir de los mismos archivos:
+
+- Parénquima del páncreas (FMA63120), remallado y suavizado.
+- Duodeno (FMA7206); arteria esplénica (FMA14773), cortada al final de la cola; tronco celíaco (FMA14812);
+  tronco de la arteria mesentérica superior (FMA66358); aorta abdominal (FMA3789) recortada a la altura del
+  páncreas; vena porta extrahepática (FMA71904, FMA50735).
+- Color, lóbulos y relieve: **texturas procedurales propias**, horneadas en Blender.

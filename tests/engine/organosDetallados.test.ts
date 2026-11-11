@@ -39,8 +39,8 @@ interface Caso {
   azules: string[]
   /** Largo máximo esperado de la pieza principal (m). */
   largo: [number, number]
-  /** +1: a la izquierda del paciente (+X); −1: a la derecha. */
-  lado: 1 | -1
+  /** +1: a la izquierda del paciente (+X); −1: a la derecha; 0: cruza la línea media (no se comprueba). */
+  lado: 1 | -1 | 0
   /** Tolerancia del centro respecto de la pieza de body.glb (m). */
   tolerancia: number
   maxMB: number
@@ -69,6 +69,18 @@ const CASOS: Caso[] = [
     largo: [0.15, 0.26],
     lado: -1,
     tolerancia: 0.015,
+    maxMB: 3,
+  },
+  {
+    archivo: 'pancreas.glb',
+    nodo: 'pancreas',
+    principal: 'parenquima',
+    piezas: ['parenquima', 'duodeno', 'arteria_esplenica', 'tronco_celiaco', 'arteria_mesenterica_superior', 'aorta_abdominal', 'vena_porta'],
+    rojos: ['arteria_esplenica', 'aorta_abdominal', 'arteria_mesenterica_superior'],
+    azules: ['vena_porta'],
+    largo: [0.1, 0.22],
+    lado: 0,
+    tolerancia: 0.01,
     maxMB: 3,
   },
 ]
@@ -133,7 +145,7 @@ describe.each(CASOS)('Órgano detallado $archivo', (caso) => {
     const largo = Math.max(...[0, 1, 2].map((k) => m.max[k]! - m.min[k]!))
     expect(largo).toBeGreaterThan(caso.largo[0])
     expect(largo).toBeLessThan(caso.largo[1])
-    expect(Math.sign(centro(m, 0))).toBe(caso.lado)
+    if (caso.lado !== 0) expect(Math.sign(centro(m, 0))).toBe(caso.lado)
   })
 
   it('las piezas están cerca del órgano (los vasos se recortaron)', () => {

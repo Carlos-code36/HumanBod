@@ -22,6 +22,7 @@ const TARGET: [number, number, number] = [0, 1.05, 0]
 const MODELOS_DETALLADOS: Readonly<Record<string, string>> = {
   heart: `${import.meta.env.BASE_URL}models/heart.glb`,
   liver: `${import.meta.env.BASE_URL}models/liver.glb`,
+  pancreas: `${import.meta.env.BASE_URL}models/pancreas.glb`,
 }
 
 // ---------- Etiqueta del órgano seleccionado ----------
