@@ -240,10 +240,16 @@ Cada cálculo debe tener: **fuente citada**, **pruebas automáticas** y **explic
   - Contexto: glándulas suprarrenales, arterias renales, uréteres (primeros 7 cm), aorta abdominal y vena cava inferior. **BodyParts3D no incluye las venas renales**
   - Uréteres reconstruidos como tubos de ~4 mm que siguen su eje (`tubo_por_eje` en `comun.py`): la parte baja del derecho viene abierta en BodyParts3D y el remallado la perdía
 - [x] Revisión de los riñones por el usuario (aprobado el 11 de noviembre de 2026)
-- [ ] Ojos con el mismo proceso
+- [x] **Ojos** — `scripts/blender/build-eyes.py` → `public/models/eyes.glb` (1.4 MB):
+  - En BodyParts3D algunas piezas del ojo derecho traen geometría de los dos ojos y no hay nervio óptico: el globo ocular se **construye limpio** con la posición, el radio (≈13 mm) y la dirección de la mirada medidos en BodyParts3D (esclerótica y córnea, repartidas por lado)
+  - Esclerótica con vasitos, córnea transparente, iris y pupila
+  - **Ventana de corte** en el cuadrante superior interno (la cámara queda entre los ojos) para ver la **retina** por dentro: disco óptico, mácula y vasos (arcadas temporales y nasales con ramas, dibujados como tubos y horneados en la textura)
+  - Contexto: los 6 músculos de cada ojo (recortados donde tapan la ventana) y nervio óptico reconstruido hasta el vértice de la órbita
+- [x] Cámara: con los órganos pequeños (ojos) el enfoque se acerca a 0,25 m y, mientras hay un órgano elegido, el zoom mínimo baja según su tamaño (nunca menos de 12 cm). Al quitar la selección la cámara se aleja suavemente al mínimo normal de 0,5 m
+- [ ] Revisión de los ojos por el usuario
 - [ ] Nervios: hoy son esquemáticos; un trazado más realista requiere otra fuente de datos
 
-**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py`, `build-pancreas.py` o `build-kidneys.py`):
+**Para regenerar el corazón o el hígado** (mismos archivos de BodyParts3D que la Fase 5; cambiar `build-heart.py` por `build-liver.py`, `build-pancreas.py` `build-kidneys.py` o `build-eyes.py`):
 `"C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" -b --factory-startup -P scripts/blender/build-heart.py -- <carpeta-obj> <partof_element_parts.txt> [--preview <carpeta>]`
 (`--preview` guarda imágenes renderizadas de frente, de lado, de atrás y de cerca). Tarda unos 45 s.
 

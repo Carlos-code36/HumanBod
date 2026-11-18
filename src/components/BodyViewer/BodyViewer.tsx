@@ -24,6 +24,7 @@ const MODELOS_DETALLADOS: Readonly<Record<string, string>> = {
   liver: `${import.meta.env.BASE_URL}models/liver.glb`,
   pancreas: `${import.meta.env.BASE_URL}models/pancreas.glb`,
   kidneys: `${import.meta.env.BASE_URL}models/kidneys.glb`,
+  eyes: `${import.meta.env.BASE_URL}models/eyes.glb`,
 }
 
 // ---------- Etiqueta del órgano seleccionado ----------
@@ -74,29 +75,58 @@ function SeguirEtiqueta({ etiquetaRef }: { etiquetaRef: RefObject<HTMLDivElement
 // para ver el detalle. Al quitar la selección vuelve a apuntar al tronco. Si la persona arrastra
 // o hace zoom durante el movimiento, se cancela.
 
-/** Distancia de la cámara al órgano enfocado (m): 0,7 m, o más si el órgano es grande (nervios). */
-const distanciaEnfoque = (tamano: number) => Math.max(0.7, tamano * 2.2)
+/** Zoom mínimo normal (m): la cámara no se acerca más al centro del tronco y no atraviesa el cuerpo (F1-07). */
+const ZOOM_MINIMO = 0.5
+
+/**
+ * Distancia de la cámara al órgano enfocado (m): 0,7 m; más si el órgano es grande (nervios) y menos si es
+ * pequeño (ojos: miden 2,6 cm y a 0,7 m no se distinguiría la retina).
+ */
+const distanciaEnfoque = (tamano: number) => (tamano < 0.1 ? 0.25 : Math.max(0.7, tamano * 2.2))
+
+/** Con un órgano elegido se permite acercarse más, según su tamaño (nunca menos de 12 cm de su centro). */
+const zoomMinimoDe = (tamano: number) => Math.min(ZOOM_MINIMO, Math.max(0.12, tamano * 1.5))
+
+interface Destino {
+  objetivo: Vector3
+  /** Acercar la cámara hasta esta distancia (si está más lejos). */
+  distancia: number | null
+  /** Alejar la cámara hasta esta distancia (si está más cerca) y dejarla como zoom mínimo al terminar. */
+  minima: number | null
+}
+
+function ajustarZoomMinimo(controles: ControlesOrbita, minimo: number) {
+  controles.minDistance = minimo
+}
 
 function EnfocarOrgano() {
   const puntos = useContext(PuntosEtiqueta)
   const controles = useThree((s) => s.controls) as ControlesOrbita | null
-  const destino = useRef<{ objetivo: Vector3; distancia: number | null } | null>(null)
+  const destino = useRef<Destino | null>(null)
 
   useEffect(
     () =>
       useAppStore.subscribe((s, antes) => {
         if (s.selectedOrganId === antes.selectedOrganId) return
         const p = s.selectedOrganId ? puntos.get(s.selectedOrganId) : undefined
-        destino.current = p
-          ? { objetivo: new Vector3(...p.centro), distancia: distanciaEnfoque(p.tamano) }
-          : { objetivo: new Vector3(...TARGET), distancia: null }
+        if (p) {
+          if (controles) ajustarZoomMinimo(controles, zoomMinimoDe(p.tamano))
+          destino.current = { objetivo: new Vector3(...p.centro), distancia: distanciaEnfoque(p.tamano), minima: null }
+        } else {
+          // Vuelve al tronco y, si la cámara quedó muy cerca, se aleja hasta el zoom mínimo normal.
+          destino.current = { objetivo: new Vector3(...TARGET), distancia: null, minima: ZOOM_MINIMO }
+        }
       }),
-    [puntos],
+    [puntos, controles],
   )
 
   useEffect(() => {
     if (!controles) return
-    const cancelar = () => (destino.current = null)
+    const cancelar = () => {
+      // Si se cancela la vuelta al tronco, igual se restablece el zoom mínimo normal.
+      if (destino.current?.minima) ajustarZoomMinimo(controles, destino.current.minima)
+      destino.current = null
+    }
     controles.addEventListener('start', cancelar)
     return () => controles.removeEventListener('start', cancelar)
   }, [controles])
@@ -113,11 +143,18 @@ function EnfocarOrgano() {
     const actual = dir.length()
     if (d.distancia !== null && actual > d.distancia) {
       camera.position.copy(controles.target).add(dir.setLength(actual + (d.distancia - actual) * k))
+    } else if (d.minima !== null && actual < d.minima) {
+      camera.position.copy(controles.target).add(dir.setLength(actual + (d.minima - actual) * k))
     }
     controles.update()
+    const ahora = camera.position.distanceTo(controles.target)
     const llego = controles.target.distanceTo(d.objetivo) < 0.002
-    const cerca = d.distancia === null || camera.position.distanceTo(controles.target) <= d.distancia + 0.005
-    if (llego && cerca) destino.current = null
+    const cerca = d.distancia === null || ahora <= d.distancia + 0.005
+    const lejos = d.minima === null || ahora >= d.minima - 0.005
+    if (llego && cerca && lejos) {
+      if (d.minima !== null) ajustarZoomMinimo(controles, d.minima)
+      destino.current = null
+    }
   })
   return null
 }
@@ -412,7 +449,7 @@ export default function BodyViewer() {
           <EnfocarOrgano />
         </PuntosEtiqueta.Provider>
         {/* F1-07: límites para que la cámara no atraviese el cuerpo ni se aleje demasiado */}
-        <OrbitControls makeDefault target={TARGET} enablePan={false} minDistance={0.5} maxDistance={5} enableDamping />
+        <OrbitControls makeDefault target={TARGET} enablePan={false} minDistance={ZOOM_MINIMO} maxDistance={5} enableDamping />
       </Canvas>
       <div ref={etiquetaRef} className="organ-label organ-label-3d" hidden aria-hidden="true" />
       <Cargando />

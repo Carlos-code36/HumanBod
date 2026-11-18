@@ -95,6 +95,18 @@ const CASOS: Caso[] = [
     tolerancia: 0.01,
     maxMB: 3,
   },
+  {
+    archivo: 'eyes.glb',
+    nodo: 'eyes',
+    principal: 'escleroticas',
+    piezas: ['escleroticas', 'retina_derecha', 'retina_izquierda', 'corneas', 'iris', 'pupilas', 'musculos', 'nervios_opticos'],
+    rojos: ['musculos'],
+    azules: [],
+    largo: [0.06, 0.12],
+    lado: 0,
+    tolerancia: 0.006,
+    maxMB: 3,
+  },
 ]
 
 const cuerpo = new Map<string, Caja>()
@@ -133,6 +145,24 @@ describe.each(CASOS)('Órgano detallado $archivo', (caso) => {
       expect(primitiva(nombre).material, nombre).toBeDefined()
     }
   })
+
+  if (caso.nodo === 'eyes') {
+    it('cada retina tiene su textura (fondo de ojo) y la córnea es transparente', () => {
+      for (const r of ['retina_derecha', 'retina_izquierda']) {
+        expect(material(r).pbrMetallicRoughness?.baseColorTexture, r).toBeTruthy()
+        expect(primitiva(r).attributes.TEXCOORD_0, r).toBeDefined()
+      }
+      expect((material('corneas') as { alphaMode?: string }).alphaMode).toBe('BLEND')
+    })
+
+    it('los dos ojos son simétricos (misma altura, a ambos lados de la línea media)', () => {
+      const d = caja('retina_derecha')
+      const i = caja('retina_izquierda')
+      expect(Math.abs(centro(d, 1) - centro(i, 1))).toBeLessThan(0.003)
+      expect(centro(d, 0)).toBeLessThan(0)
+      expect(centro(i, 0)).toBeGreaterThan(0)
+    })
+  }
 
   it('la pieza principal usa textura de color, mapa de normales y coordenadas UV', () => {
     expect(material(caso.principal).pbrMetallicRoughness?.baseColorTexture).toBeTruthy()

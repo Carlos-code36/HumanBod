@@ -1,4 +1,4 @@
-# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`, `pancreas.glb`, `kidneys.glb`)
+# Créditos de los modelos 3D (`body.glb`, `heart.glb`, `liver.glb`, `pancreas.glb`, `kidneys.glb`, `eyes.glb`)
 
 **BodyParts3D, © The Database Center for Life Science.**
 https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
@@ -66,3 +66,17 @@ Generado con Blender mediante `scripts/blender/build-kidneys.py`, a partir de lo
 - **Uréteres (FMA15571, FMA15572) reconstruidos** como tubos de ~4 mm que siguen el eje de la malla original
   (la del derecho está abierta); solo los primeros 7 cm.
 - Color, capilares y relieve: **texturas procedurales propias**, horneadas en Blender.
+
+### `eyes.glb` (ojos detallados)
+
+Generado con Blender mediante `scripts/blender/build-eyes.py`:
+
+- **Globos oculares de construcción propia** (esclerótica, córnea, iris, pupila y retina), con la posición,
+  el radio y la dirección de la mirada **medidos** en la esclerótica y la córnea de BodyParts3D
+  (FMA58271, FMA58272, FMA58239, FMA58240). Ventana de corte para ver la retina.
+- Retina: disco óptico, mácula y vasos **dibujados de forma esquemática** (no son un trazado real de una
+  persona), horneados en la textura.
+- Músculos extraoculares de BodyParts3D: rectos superior, inferior, lateral y medial, y oblicuos superior
+  e inferior de cada ojo (FMA49044 a FMA49057), recortados junto a la ventana.
+- **Nervio óptico reconstruido** (BodyParts3D no lo incluye): tubo desde el polo posterior del ojo hasta el
+  vértice de la órbita, donde convergen los músculos rectos.

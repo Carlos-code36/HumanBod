@@ -292,10 +292,10 @@ def malla_liviana(alto, nombre, objetivo):
     return bajo
 
 
-def hornear(alto, bajo, rugosidad, distancia_mm=6.0):
+def hornear(alto, bajo, rugosidad, distancia_mm=6.0, resolucion=TEXTURA):
     """Hornea color y normales del material de `alto` sobre `bajo`; borra `alto`."""
     def imagen(nombre, no_color):
-        img = bpy.data.images.new(nombre, TEXTURA, TEXTURA, alpha=False, float_buffer=no_color)
+        img = bpy.data.images.new(nombre, resolucion, resolucion, alpha=False, float_buffer=no_color)
         if no_color:
             img.colorspace_settings.name = "Non-Color"
         return img

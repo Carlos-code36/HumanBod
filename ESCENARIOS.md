@@ -60,6 +60,10 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | F5-19 Revisión visual del páncreas | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
 | 5b | F5-20 Riñones detallados en su sitio, piezas y materiales | ✅ 🖱️ | `organosDetallados.test.ts`: centro igual a los riñones de `body.glb` (±1 cm), arterias rojas, vena cava azul; vistos en Chrome de frente y girados |
 | 5b | F5-21 Revisión visual de los riñones | ✅ | Aprobado por el usuario (11 de noviembre de 2026) |
+| 5b | F5-22 Ojos detallados en su sitio, piezas y materiales | ✅ 🖱️ | `organosDetallados.test.ts`: centro igual a los ojos de `body.glb` (±6 mm), ojos simétricos, retinas con textura, córnea transparente; vistos en Chrome de frente, con zoom y desde arriba |
+| 5b | F5-23 La retina se ve por la ventana de corte | 🖱️ | Con zoom y mirando un poco desde arriba se ven el disco óptico, los vasos y la mácula |
+| 5b | F5-24 Zoom con órganos pequeños | 🖱️ | Al elegir los ojos la cámara se acerca a 0,25 m; al quitar la selección (Esc) vuelve al tronco a 0,5 m como mínimo |
+| 5b | F5-25 Revisión visual de los ojos | ⏳ | **Falta tu revisión** |
 | 6 | F6-01 a F6-08 Web: publicación y pulido | ⬜ | Pendientes |
 | 6 | F6-09 El 3D no se pierde al leer información | ✅ 🖱️ | Escritorio (1440×900) y celular (390×844): la página no hace scroll y el 3D queda fijo al desplazar el panel |
 | 6 | F6-10 Pestañas | ✅ | Clic y flechas del teclado; un solo panel visible (`layout.test.tsx`) |
@@ -102,6 +106,11 @@ Actualizado tras el rediseño de la interfaz (Fase 6, en curso). Las pruebas aut
 | 5b | Páncreas: los lóbulos parecían baldosas agrietadas; al deformarlos mucho quedaban borrosos | Deformación con ruido de ~1 mm y surcos más suaves |
 | 5b | Riñones: faltaba el uréter derecho | Su malla viene abierta en BodyParts3D (412 bordes sueltos): al remallarla quedaba una lámina que el diezmado colapsaba. Uréteres reconstruidos como tubos que siguen su eje |
 | 5b | Riñones: los capilares parecían grietas | Líneas más finas y tenues |
+| 5b | Ojos: algunas piezas del ojo derecho de BodyParts3D traen geometría de los dos ojos | Los vértices se reparten por lado del cuerpo antes de medir; el globo se construye limpio con esas medidas |
+| 5b | Ojos: los vasos de la retina parecían una red de celdas | Se dibujan arcadas reales (temporales que rodean la mácula y nasales) con ramas, como tubos horneados en la textura |
+| 5b | Ojos: la ventana externa no se veía en la app | La cámara queda entre los ojos y los ve desde el lado de la nariz: ventana movida al cuadrante superior interno y músculos recortados ahí |
+| 5b | Ojos: a la esclerótica le faltaba la textura | La copia liviana se hacía después de asignarle el material procedural y se quedaba con él; ahora se copia antes |
+| 5b | Ojos: a 0,5 m (zoom mínimo) no se distinguía la retina | Zoom mínimo según el tamaño del órgano elegido; se restablece al quitar la selección |
 | 5b | Una captura automática mostró la cámara en un ángulo raro tras quitar la piel | No se pudo reproducir (se repitió la misma secuencia con capturas cada 0,3 s); queda anotado por si lo ves a mano |
 | 6 | Al hacer scroll para leer, el 3D se perdía de vista | Rediseño: 3D fijo, panel lateral con pestañas y ventanas modales |
 | 6 | En celular la página quedaba 25 px más ancha que la pantalla | La columna de la página crecía para que cupiera el título sin saltos: `grid-template-columns: minmax(0, 1fr)` |
@@ -342,6 +351,10 @@ Una sola fuente de verdad para los tipos (TypeScript) y para la validación.
 | F5-19 | Revisión visual del páncreas | Aprobado por el usuario | 👁️ |
 | F5-20 | Riñones detallados | Mismas comprobaciones que F5-08 y F5-09 | 🔗 |
 | F5-21 | Revisión visual de los riñones | Aprobado por el usuario | 👁️ |
+| F5-22 | Ojos detallados | Mismas comprobaciones que F5-08 y F5-09; simetría; córnea transparente | 🔗 |
+| F5-23 | Retina visible | Por la ventana de corte se ven disco óptico, vasos y mácula | 👁️ |
+| F5-24 | Zoom con órganos pequeños | Se acerca lo suficiente; al quitar la selección vuelve al mínimo normal sin atravesar el cuerpo | 👁️ |
+| F5-25 | Revisión visual de los ojos | Aprobado por el usuario | 👁️ |
 
 ---
 
